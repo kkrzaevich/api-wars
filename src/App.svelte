@@ -2,10 +2,11 @@
   import HandTop from "./components/cards/HandTop.svelte";
   import HandBottom from "./components/cards/HandBottom.svelte";
   import Battlefield from "./components/battlefield/Battlefield.svelte";
+  import Hand from "./components/cards/Hand.svelte";
 </script>
 
 <main>
-  <div class="top">
+  <!-- <div class="top">
     <HandTop />
   </div>
   <div class="center">
@@ -13,7 +14,8 @@
   </div>
   <div class="bottom">
     <HandBottom />
-  </div>
+  </div> -->
+  <Hand />
 </main>
 
 <style>
