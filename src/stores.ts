@@ -37,6 +37,8 @@ export const globalHoverTopGap = 5;
 export const globalSelectLeft = 300;
 export const globalSelectTopGap = 20;
 
+export const globalDiscardTop = 200;
+
 export const defaultHandSize = 4;
 
 //
@@ -78,7 +80,7 @@ class CardInHand {
     id: number = 0;
     left: number = 0;
     top: number = 0;
-    state: "default" | "hover" | "active" = "default";
+    state: "default" | "hover" | "active" | "discarded" = "default";
 
     constructor(card: Card = fireball, id: number = 0, left: number = 0, frontVisible: boolean = true, ) {
         this.card = card;
@@ -139,6 +141,8 @@ export class Hand {
                 i = (i === 0) ? i+2 : i+3;            
             } else if (card.state === "active") {
                 card.select(globalSelectLeft,globalSelectTopGap,globalSelectCardWidth);
+            } else if (card.state === "discarded") {
+
             }
         })
     }
@@ -202,12 +206,13 @@ export class Hand {
         this.cards.push(newCardInHand);
     }
 
-    removeCard(id: number) {
-        this.cards.splice(id, 1);
-        // this.cards.forEach((card, index) => {
-        //     card.id = index;
-        // })
+    removeCard(cardId: number) {
+        const currentCard = this.cards.find((card) => card.id === cardId);
+        if (currentCard) {
+            currentCard.state = 'discarded';
+        }
         this.renderCards();
+
     }
 
     useCard(cardId: number) {
