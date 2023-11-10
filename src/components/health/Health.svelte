@@ -19,13 +19,7 @@
         align-items: center;
         justify-items: center;
         width: fit-content;
-    }
 
-    div {
-        /* display: flex;
-        justify-content: space-between;
-        align-items: center;
-        align-self: stretch; */
     }
 
     p {
@@ -36,6 +30,15 @@
         font-style: normal;
         font-weight: 400;
         line-height: normal;
+
+    }
+
+    p,img {
+        transition: filter 0.5s;
+    }
+
+    p:hover,img:hover {
+        filter: drop-shadow(0px 4px 10px rgba(0, 0, 0, 0.75));
     }
 </style>
 

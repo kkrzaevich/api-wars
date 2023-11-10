@@ -1,8 +1,11 @@
 <script lang="ts">
-    import { Hand, hand} from "../../stores";
+    import { Hand, playerHandStore, emenyHandStore } from "../../stores";
     import { fade, fly } from 'svelte/transition';
+    export let orientation: "top" | "bottom" = "bottom";
+
     let localHand: Hand;
-    hand.subscribe((hand) => {localHand = hand});
+    emenyHandStore.subscribe((hand) => {localHand = hand});
+
 
 </script>
 
@@ -14,26 +17,41 @@
             ${localHand.orientation === "top" ? "top" : "bottom"}: ${card.top}px; 
             
             width: ${card.width}px`}
-            out:fly={{ delay: 0, y: -200 }}
+            out:fly={{ delay: 0, y: 200 }}
             >
-                {#if card.state==="active"}
-                    <button class="arrow top" in:fade={{ delay: 250 }} out:fade={{ delay: 250 }} on:click={() => {localHand.useCard(card.id); localHand = localHand}}>
+                <!-- {#if card.state==="active"}
+                    <button class="arrow top" in:fade={{ delay: 250 }} out:fade={{ delay: 250 }} on:click={() => {
+                        localHand.useCard(card.id); 
+                        localHand = localHand;
+                        setTimeout(()=>{localHand.destroyCard(card.id);localHand = localHand;},2000)
+                        }}>
                         <img src="/cards/use.svg" alt="use card">
                     </button>
-                {/if}
-                <button class="card"
-                on:click={() => {localHand.selectCard(card.id); localHand = localHand}}
+                {/if} -->
+                <button class={`card ${card.state === "inUse" ? "in-use" : ""}`}
+                on:click={() => {localHand.selectCard(card.id); localHand = localHand;
+                        setTimeout(()=>{localHand.useCard(card.id);localHand = localHand;},2000)
+                        setTimeout(()=>{localHand.destroyCard(card.id);localHand = localHand;},4000)
+                }}
                 on:mouseover={() => {localHand.hoverCard(card.id); localHand = localHand}} on:focus={() => {localHand.hoverCard(card.id); localHand = localHand}}
                 on:mouseout={()=>{localHand.unhoverCard(card.id); localHand = localHand}} on:blur={()=>{localHand.unhoverCard(card.id); localHand = localHand}}
                 out:fade={{ delay: 250 }}
                 >
-                    <img src={`/cards/${card.card.srcFront}`} alt="the card">
+                    {#if card.state === "inUse"}
+                        <img
+                        src={`/cards/${card.card.srcFront}`} 
+                        alt="the card">
+                    {:else}
+                        <img
+                        src={`/cards/${card.card.srcBack}`} 
+                        alt="the card">
+                    {/if}
                 </button>
-                {#if card.state==="active"}
+                <!-- {#if card.state==="active"}
                     <button class="arrow bottom" in:fade={{ delay: 250 }} out:fade={{ delay: 250 }} on:click={() => {localHand.deselectCard(card.id); localHand = localHand}}>
                         <img src="/cards/deselect.svg" alt="deselect card">
                     </button>
-                {/if}
+                {/if} -->
             </div>
         {/if}
     {/each}
@@ -59,9 +77,17 @@
         transition: filter 1s;
     }
 
-    .card:hover {
+    /* .card:hover {
         filter: drop-shadow(0px 4px 10px rgba(0, 0, 0, 0.50));
+    } */
+
+    .in-use {
+        filter: drop-shadow(0px 4px 50px rgba(255, 125, 0, 0.75));
     }
+
+    /* .in-use:hover {
+        filter: drop-shadow(0px 4px 15px rgb(255, 125, 0));
+    } */
 
     div {
         position: absolute;
@@ -87,10 +113,12 @@
     }
 
     .top {
-        bottom: 105%;
+        top: 105%;
+        transform: scaleY(-1);
     }
 
     .bottom {
-        top: 105%;
+        bottom: 105%;
+        transform: scaleY(-1);
     }
 </style>

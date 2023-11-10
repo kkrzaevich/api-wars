@@ -3,12 +3,16 @@
 </script>
 
 <main>
-    <Health />
+    <div class="health-left">
+        <Health />
+    </div>
     <div class="stage">
         <img src="/players/player1.svg" alt="player 1">
         <img src="/players/player2.svg" alt="player 2">
     </div>
-    <Health />
+    <div class="health-right">
+        <Health />        
+    </div>
 </main>
 
 <style>
@@ -17,7 +21,7 @@
         justify-content: center;
         align-items: center;
         gap: 122px;
-
+        perspective: 1500px;
     }
 
     .stage {
@@ -30,4 +34,24 @@
 
         transform: scale(0.5);
     }
+
+    .health-left {
+        transform: rotateY(0deg);
+        transition: transform 1s;
+    }
+
+    .health-right {
+        transform: rotateY(0deg);
+        transition: transform 1s;
+    }
+
+    .health-left:hover {
+        transform: rotateY(30deg);
+    }
+
+    .health-right:hover {
+        transform: rotateY(-30deg);
+    }
+
+
 </style>

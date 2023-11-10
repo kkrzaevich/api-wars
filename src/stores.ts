@@ -80,7 +80,7 @@ class CardInHand {
     id: number = 0;
     left: number = 0;
     top: number = 0;
-    state: "default" | "hover" | "active" | "discarded" = "default";
+    state: "default" | "hover" | "active" | "inUse" |"discarded" = "default";
 
     constructor(card: Card = fireball, id: number = 0, left: number = 0, frontVisible: boolean = true, ) {
         this.card = card;
@@ -113,11 +113,13 @@ export class Hand {
     animationPlays: boolean = false;
     animationTime: number = 250;
     hasSelectedCards: boolean = false;
+    frontVisible: boolean = true;
 
-    constructor(orientation: string = "top", gap: number = globalGap, cards: CardInHand[] = [fireballInHand]) {
+    constructor(orientation: string = "top", gap: number = globalGap, cards: CardInHand[] = [fireballInHand], frontVisible: boolean = true) {
         this.orientation = orientation;
         this.gap = gap;
         this.cards = cards;
+        this.frontVisible = frontVisible;
     }
 
     renderCards() {
@@ -195,7 +197,7 @@ export class Hand {
         this.cards = [];
         for (let i = 0; i < handSize; i++) {
             const newCard = availableCards[Math.floor(Math.random()*availableCards.length)];
-            const newCardInHand = new CardInHand(newCard, i, this.gap*i, true)
+            const newCardInHand = new CardInHand(newCard, i, this.gap*i, this.frontVisible ? true : false)
             this.cards.push(newCardInHand);
         }
     }
@@ -216,15 +218,29 @@ export class Hand {
     }
 
     useCard(cardId: number) {
+        const currentCard = this.cards.find((card) => card.id === cardId);
+        if (currentCard) {
+            currentCard.state = 'inUse';
+        }
+        this.renderCards();
+        console.log("BIG JOPPA")
+    }
+
+    destroyCard(cardId: number) {
         this.removeCard(cardId);
         this.hasSelectedCards = false;
     }
 }
 
-const initHand = new Hand("bottom",30,[]);
-initHand.fillHand(defaultHandSize,availableCards)
+const playerHand = new Hand("bottom",30,[],true);
+playerHand.fillHand(defaultHandSize,availableCards)
 
-export const hand = writable(initHand)
+export const playerHandStore = writable(playerHand)
+
+const emenyHand = new Hand("top",30,[],false);
+emenyHand.fillHand(defaultHandSize,availableCards)
+
+export const emenyHandStore = writable(emenyHand)
 
 //
 //

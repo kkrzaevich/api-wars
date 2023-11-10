@@ -1,21 +1,21 @@
 <script>
-  import HandTop from "./components/cards/HandTop.svelte";
-  import HandBottom from "./components/cards/HandBottom.svelte";
   import Battlefield from "./components/battlefield/Battlefield.svelte";
-  import Hand from "./components/cards/Hand.svelte";
+  import PlayerHand from "./components/cards/PlayerHand.svelte";
+  import EnemyHand from "./components/cards/EnemyHand.svelte";
 </script>
 
 <main>
-  <!-- <div class="top">
-    <HandTop />
+  <div class="top">
+    <EnemyHand/>
   </div>
   <div class="center">
     <Battlefield />
   </div>
   <div class="bottom">
-    <HandBottom />
-  </div> -->
-  <Hand />
+    <PlayerHand/>
+  </div>
+  
+  
 </main>
 
 <style>
@@ -30,6 +30,7 @@
     padding: 50px 79px 50px 79px;
 
     position: relative;
+    transform: translate(0);
   }
 
   .center {
