@@ -1,7 +1,8 @@
 <script>
   import Battlefield from "./components/battlefield/Battlefield.svelte";
-  import PlayerHand from "./components/cards/PlayerHand.svelte";
+  import PlayerHandCopy from "./components/cards/PlayerHandCopy.svelte";
   import EnemyHand from "./components/cards/EnemyHand.svelte";
+  import Card from "./components/cards/Card.svelte";
 </script>
 
 <main>
@@ -12,7 +13,7 @@
     <Battlefield />
   </div>
   <div class="bottom">
-    <PlayerHand/>
+    <PlayerHandCopy/>
   </div>
   
   

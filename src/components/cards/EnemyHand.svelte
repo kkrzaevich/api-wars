@@ -1,7 +1,6 @@
 <script lang="ts">
     import { Hand, playerHandStore, emenyHandStore } from "../../stores";
     import { fade, fly } from 'svelte/transition';
-    export let orientation: "top" | "bottom" = "bottom";
 
     let localHand: Hand;
     emenyHandStore.subscribe((hand) => {localHand = hand});

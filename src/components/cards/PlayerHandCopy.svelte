@@ -6,15 +6,12 @@
     let localHand: Hand; 
     playerHandStore.subscribe((hand) => {localHand = hand});
 
+    let width = 100;
+  let height = 150;
 
 </script>
 
-<main>
-    <Card />
-    <Card />
-    <Card />
-    <Card />
-
+<!-- <main>
     {#each localHand.cards as card, i}
         {#if card.state !== "discarded"}
             <div style={`z-index: ${card.id+1}; 
@@ -55,13 +52,120 @@
             </div>
         {/if}
     {/each}
+</main> -->
+
+
+
+<main>
+    {#each localHand.cards as card, i}
+        {#if card.state !== "discarded"}
+            <div class="card-wrapper" style={`z-index: ${card.id+1}; 
+            left: ${card.left}px;
+            ${localHand.orientation === "top" ? "top" : "bottom"}: ${card.top}px;`}
+            out:fly={{ delay: 0, y: -200 }}>
+                {#if card.state==="active"}
+                    <button class="arrow top" in:fade={{ delay: 250 }} out:fade={{ delay: 250 }} on:click={() => {
+                        localHand.useCard(card.id); 
+                        localHand = localHand;
+                        setTimeout(()=>{localHand.destroyCard(card.id);localHand = localHand;},2000)
+                        }}>
+                        <img src="/cards/use.svg" alt="use card">
+                    </button>
+                {/if}
+                <button class="flip-box" style={`width: ${card.width}px; height: ${card.width*1.5}px;`}
+                on:mouseover={()=>{localHand.hoverCard(card.id); localHand = localHand}} on:focus={()=>{localHand.hoverCard(card.id); localHand = localHand}}
+                on:mouseout={()=>{localHand.unhoverCard(card.id); localHand = localHand}} on:blur={()=>{localHand.unhoverCard(card.id); localHand = localHand}}
+                on:click={() => {localHand.selectCard(card.id); localHand = localHand}}
+                >
+                    <div class="flip-box-inner">
+                    <img src={`/cards/${card.card.srcFront}`} class="flip-box-front" alt="card-front">
+                    <img src={`/cards/${card.card.srcBack}`} class="flip-box-back" alt="card-back">
+                    </div>
+                </button>
+                {#if card.state==="active"}
+                    <button class="arrow bottom" in:fade={{ delay: 250 }} out:fade={{ delay: 250 }} on:click={() => {
+                        localHand.deselectCard(card.id); localHand = localHand}}>
+                        <img src="/cards/deselect.svg" alt="deselect card">
+                    </button>
+                {/if}
+            </div>
+        {/if}
+    {/each}
 </main>
 
 
 
 
 <style>
-    div {
+    main {
+        position: relative;
+    }
+
+    .card-wrapper {
+        position: absolute;
+        width: fit-content;
+        transition: all 1s;
+    }
+
+    .flip-box {
+    background-color: transparent;
+    perspective: 1000px;
+    transition: all 1s;
+    }
+
+    .flip-box-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 0.8s;
+    transform-style: preserve-3d;
+    }
+
+    .flip-box:hover .flip-box-inner {
+    transform: rotateY(20deg);
+    }
+
+    .flip-box-front, .flip-box-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    }
+
+    .flip-box-back {
+
+    transform: rotateY(180deg);
+    }
+
+    .arrow {
+        position: absolute;
+        width: 25%;
+
+        margin-left: auto;
+        margin-right: auto;
+        left: 0;
+        right: 0;
+        text-align: center;
+
+        transition: filter 0.5s;
+    }
+
+    .arrow:hover {
+        filter: drop-shadow(0px 4px 5px rgba(0, 0, 0, 0.50));
+    }
+
+    .top {
+        bottom: 105%;
+    }
+
+    .bottom {
+        top: 105%;
+    }
+
+
+    /* div {
         width: fit-content;
     }
 
@@ -164,5 +268,5 @@
 
     .bottom {
         top: 105%;
-    }
+    } */
 </style>
