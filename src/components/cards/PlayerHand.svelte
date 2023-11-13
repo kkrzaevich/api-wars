@@ -1,27 +1,19 @@
 <script lang="ts">
-    import { Hand, playerHandStore, emenyHandStore } from "../../stores";
+    import { Hand, playerHandStore } from "../../stores";
     import { fade, fly } from 'svelte/transition';
-    import Card from "./Card.svelte";
 
     let localHand: Hand; 
     playerHandStore.subscribe((hand) => {localHand = hand});
 
-
 </script>
 
 <main>
-    <Card />
-    <Card />
-    <Card />
-    <Card />
-
     {#each localHand.cards as card, i}
         {#if card.state !== "discarded"}
-            <div style={`z-index: ${card.id+1}; 
-            left: ${card.left}px; 
+            <div class="card-wrapper" style={`z-index: ${card.id+1}; 
+            left: ${card.left}px;
             ${localHand.orientation === "top" ? "top" : "bottom"}: ${card.top}px;`}
-            out:fly={{ delay: 0, y: -200 }}
-            >
+            out:fly={{ delay: 0, y: -200 }}>
                 {#if card.state==="active"}
                     <button class="arrow top" in:fade={{ delay: 250 }} out:fade={{ delay: 250 }} on:click={() => {
                         localHand.useCard(card.id); 
@@ -31,20 +23,18 @@
                         <img src="/cards/use.svg" alt="use card">
                     </button>
                 {/if}
-                <button class={`card ${card.state === "inUse" ? "in-use" : ""}
-                ${card.state === "active" ? "active" : ""}
-                ${card.state === "hover" ? "hover" : ""}
-                `}
-                on:click={() => {localHand.selectCard(card.id); localHand = localHand}}
-                on:mouseover={() => {localHand.hoverCard(card.id); localHand = localHand}} on:focus={() => {localHand.hoverCard(card.id); localHand = localHand}}
+                <button class="card {`${card.state==="active" ? "active" : ""} 
+                ${card.state==="inUse" ? "in-use" : ""}
+                `}" 
+                style={`width: ${card.width}px; height: ${card.width*1.5}px;`}
+                on:mouseover={()=>{localHand.hoverCard(card.id); localHand = localHand}} on:focus={()=>{localHand.hoverCard(card.id); localHand = localHand}}
                 on:mouseout={()=>{localHand.unhoverCard(card.id); localHand = localHand}} on:blur={()=>{localHand.unhoverCard(card.id); localHand = localHand}}
-                out:fade={{ delay: 250 }}
+                on:click={() => {localHand.selectCard(card.id); localHand = localHand}}
                 >
                     <div class="card-inner">
-                        <img class="card-front" src={`/cards/${card.card.srcFront}`} alt="the card front">
-                        <img class="card-back" src={`/cards/${card.card.srcBack}`} alt="the card back">
+                        <img src={`/cards/${card.card.srcFront}`} class="card-front" alt="card-front">
+                        <img src={`/cards/${card.card.srcBack}`} class="card-back" alt="card-back">
                     </div>
-                    
                 </button>
                 {#if card.state==="active"}
                     <button class="arrow bottom" in:fade={{ delay: 250 }} out:fade={{ delay: 250 }} on:click={() => {
@@ -61,37 +51,26 @@
 
 
 <style>
-    div {
-        width: fit-content;
-    }
-
-    img {
-        width: 100%;
-    }
-
     main {
         position: relative;
     }
 
-    button {
-        width: 100px;
-        height: 150px;
-        transition: all 10s;
+    .card-wrapper {
+        position: absolute;
+        width: fit-content;
+        transition: all 1s;
     }
 
-    .hover {
-        width: 125px;
-        height: 187.5px;
-    }
-
-    .active {
-        width: 150px;
-        height: 225px;
-    }    
+    
 
     .card {
-        transition: filter 1s;
+        background-color: transparent;
         perspective: 1000px;
+        transition: all 1s;
+    }
+
+    .card:hover {
+        filter: drop-shadow(0px 4px 10px rgba(0, 0, 0, 0.5));
     }
 
     .card-inner {
@@ -104,21 +83,27 @@
     }
 
     .card:hover .card-inner {
-        transform: rotateY(0deg);
-        filter: drop-shadow(0px 4px 10px rgba(0, 0, 0, 0.50));
+        transform: rotateY(10deg) rotateZ(-5deg);  
     }
 
-    .card-back {
-        transform: rotateY(180deg);
+    .active:hover .card-inner {
+        transform: rotateX(10deg) rotateY(-20deg) rotateZ(5deg);         
     }
 
-    .card-front {
-        transform: rotateY(0deg);
+    .in-use {
+        transform: rotateX(15deg) rotateY(-10deg) rotateZ(15deg);  
+        filter: drop-shadow(0px 4px 50px rgba(50, 0, 255, 0.75));       
+    }
+
+    .in-use:hover {
+        filter: drop-shadow(0px 4px 15px rgb(50, 0, 255));
+    }
+
+    .discarded {
+        transform: rotateY(-200deg);           
     }
 
     .card-front, .card-back {
-        top:0px;
-        left:0px;
         position: absolute;
         width: 100%;
         height: 100%;
@@ -126,19 +111,8 @@
         backface-visibility: hidden;
     }
 
-
-    .in-use {
-        filter: drop-shadow(0px 4px 50px rgba(50, 0, 255, 0.75));
-    }
-
-    .in-use:hover {
-        filter: drop-shadow(0px 4px 15px rgb(50, 0, 255));
-    }
-
-    div {
-        position: absolute;
-        width: fit-content;
-        transition: all 1s;
+    .card-back {
+        transform: rotateY(180deg);
     }
 
     .arrow {
@@ -151,18 +125,33 @@
         right: 0;
         text-align: center;
 
-        transition: filter 0.5s;
+        transition: all 0.5s;
+    }
+
+    .arrow > img {
+        width: 100%;
     }
 
     .arrow:hover {
         filter: drop-shadow(0px 4px 5px rgba(0, 0, 0, 0.50));
+
     }
 
     .top {
-        bottom: 105%;
+        top: 12%;
+        left: 115%;
     }
 
     .bottom {
-        top: 105%;
+        bottom: 12%;
+        left: 115%;
+    }
+
+    .top:hover {
+        transform: rotateZ(5deg);   
+    }
+
+    .bottom:hover {
+        transform: rotateZ(-12deg);         
     }
 </style>
