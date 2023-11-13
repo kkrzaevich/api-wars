@@ -22,6 +22,10 @@
 
     }
 
+    img {
+        min-width: 35px;
+    }
+
     p {
         color: #000;
 

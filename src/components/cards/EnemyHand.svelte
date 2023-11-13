@@ -8,7 +8,7 @@
 </script>
 
 <main>
-    {#each localHand.cards as card, i}
+    {#each localHand.cards as card}
         {#if card.state !== "discarded"}
             <div class="card-wrapper" style={`z-index: ${card.id+1}; 
             left: ${card.left}px;
@@ -59,8 +59,6 @@
         width: fit-content;
         transition: all 1s;
     }
-
-    
 
     .card {
         background-color: transparent;
@@ -172,57 +170,4 @@
     .bottom:hover {
         transform: rotateZ(-12deg);         
     }
-
-    /* img {
-        width: 100%;
-    }
-
-    main {
-        position: relative;
-    }
-
-    button {
-        width: 100%;
-    }
-
-    .card {
-        transition: filter 1s;
-    }
-
-    .in-use {
-        filter: drop-shadow(0px 4px 50px rgba(255, 125, 0, 0.75));
-    }
-
-    div {
-        position: absolute;
-        width: 100px;
-        transition: all 1s;
-    }
-
-    .arrow {
-        position: absolute;
-        width: 25%;
-
-        margin-left: auto;
-        margin-right: auto;
-        left: 0;
-        right: 0;
-        text-align: center;
-
-        transition: filter 0.5s;
-    }
-
-    .arrow:hover {
-        filter: drop-shadow(0px 4px 5px rgba(0, 0, 0, 0.50));
-    }
-
-    .top {
-        top: 105%;
-        transform: scaleY(-1);
-    }
-
-    .bottom {
-        bottom: 105%;
-        transform: scaleY(-1);
-    } */
 </style>

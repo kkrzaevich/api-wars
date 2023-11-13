@@ -5,19 +5,23 @@
     let localHand: Hand; 
     playerHandStore.subscribe((hand) => {localHand = hand});
 
+    $: status = "";
+
 </script>
 
 <main>
-    {#each localHand.cards as card, i}
+    <h1 style="position:absolute; left:-300px; bottom:200px;">Status: {status}</h1>
+    {#each localHand.cards as card}
         {#if card.state !== "discarded"}
             <div class="card-wrapper" style={`z-index: ${card.id+1}; 
             left: ${card.left}px;
             ${localHand.orientation === "top" ? "top" : "bottom"}: ${card.top}px;`}
             out:fly={{ delay: 0, y: -200 }}>
                 {#if card.state==="active"}
-                    <button class="arrow top" in:fade={{ delay: 250 }} out:fade={{ delay: 250 }} on:click={() => {
+                    <button class="arrow top" in:fade={{ delay: 250 }} out:fade={{ delay: 250 }} on:click={async () => {
                         localHand.useCard(card.id); 
                         localHand = localHand;
+                        status = await card.card.use()
                         setTimeout(()=>{localHand.destroyCard(card.id);localHand = localHand;},2000)
                         }}>
                         <img src="/cards/use.svg" alt="use card">
@@ -60,8 +64,6 @@
         width: fit-content;
         transition: all 1s;
     }
-
-    
 
     .card {
         background-color: transparent;

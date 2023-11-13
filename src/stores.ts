@@ -49,24 +49,62 @@ class Card {
     name: string = "Fireball";
     srcFront: string = "fireball.svg";
     srcBack: string = "back.svg";
+    callback: Function = () => {}
 
-    constructor(name: string = "Fireball", srcFront: string = "fireball.svg") {
+    constructor(name: string = "Fireball", srcFront: string = "fireball.svg", callback: Function = () => {}) {
         this.name = name;
         this.srcFront = srcFront;
+        this.callback = callback;
     }
 
-    use() {}
+    async use(): Promise<string> {return await this.callback()}
 }
 
-const fireball = new Card("Fireball","fireball.svg")
+const fireball = new Card("Fireball","fireball.svg", async () => {
+    try {const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=Tashkent&appid=${import.meta.env.VITE_WEATHER_KEY}&units=metric`, {
+        method: 'GET',
+    })
+
+    if (!res.ok) {
+        throw new Error(`An error has occured: ${res.status}`)
+    } else {
+        //@ts-ignore
+        let weather = await res.json();
+        let result = weather.weather[0].main;
+        return result;
+    }
+
+    } catch(err) {
+        throw new Error(`An error has occured: ${err}`)
+    }
+    
+})
+
+// fetch("https://api.openweathermap.org/data/2.5/weather?q=London&appid=${import.meta.env.VITE_WEATHER_KEY}&units=metric", {
+//     "method": "GET",
+//       })
+//   .then(response => {
+//     console.log(await response.json());
+//   })
+//   .catch(err => {
+//     console.log(err);
+//   });
+
+
+
+
 const cloudShield = new Card("Cloud shield","cloud-shield.svg")
 const cauterizeWounds = new Card("Cauterize wounds", "cauterize-wounds.svg")
 const healingRain = new Card("Healing rain", "healing-rain.svg")
 const lightning = new Card("Lightning", "lightning.svg");
 const waterBolt = new Card("Water bolt", "water-bolt.svg");
 
+// const availableCards: Card[] = [
+//     fireball, cloudShield, cauterizeWounds, healingRain, lightning, waterBolt
+// ]
+
 const availableCards: Card[] = [
-    fireball, cloudShield, cauterizeWounds, healingRain, lightning, waterBolt
+    fireball, fireball, fireball, fireball, fireball, waterBolt
 ]
 
 //
@@ -155,7 +193,6 @@ export class Hand {
             currentCard.state = "hover";
             this.renderCards();
         }
-        console.log(`HOVER a card with a name ${currentCard?.card.name}, id ${currentCard?.id}`)
     }
 
     unhoverCard(cardId: number) {
@@ -164,7 +201,6 @@ export class Hand {
             currentCard.state = "default";
             this.renderCards();
         }
-        console.log(`UNHOVER a card with a name ${currentCard?.card.name}, id ${currentCard?.id}`)
     }
 
     selectCard(cardId: number) {
@@ -177,7 +213,6 @@ export class Hand {
             this.animationPlays = true;
             setTimeout(() => {this.animationPlays = false}, this.animationTime);
         }
-        console.log(`SELECT a card with a name ${currentCard?.card.name}, id ${currentCard?.id}`)
     }
 
     deselectCard(cardId: number) {
@@ -190,7 +225,6 @@ export class Hand {
             this.animationPlays = true;
             setTimeout(() => {this.animationPlays = false}, this.animationTime);
         }
-        console.log(`DESELECT a card with a name ${currentCard?.card.name}, id ${currentCard?.id}`)
     }
 
     fillHand(handSize: number, availableCards: Card[]) {
@@ -223,7 +257,7 @@ export class Hand {
             currentCard.state = 'inUse';
         }
         this.renderCards();
-        console.log("BIG JOPPA")
+        currentCard?.card.use()
     }
 
     destroyCard(cardId: number) {
@@ -246,8 +280,15 @@ export const emenyHandStore = writable(emenyHand)
 //
 // Character class
 
-class CharacterClass {
+export class CharacterClass {
+    name: string = "weatherman";
+    cards: Card[] = [fireball, cloudShield, cauterizeWounds, healingRain, lightning, waterBolt];
 
+    constructor(name: string = "weatherman", 
+    cards: Card[] = [fireball, cloudShield, cauterizeWounds, healingRain, lightning, waterBolt]) {
+        this.name = name;
+        this.cards = cards;
+    }
 }
 
 //
