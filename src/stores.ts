@@ -43,6 +43,46 @@ export const defaultHandSize = 4;
 
 //
 //
+// Cities
+
+class City {
+    name: string;
+    latitude: number;
+    longitude: number;
+
+    constructor(name: string, latitude: number, longitude: number) {
+        this.name = name;
+        this.latitude = latitude;
+        this.longitude = longitude
+    }
+}
+
+const buenosAires = new City("Buenos Aires", -34.60, -58.38);
+const london = new City("London", 51.50, 0.11);
+const ryanOklahoma = new City("Ryan, Oklahoma", 34.02, -97.95);
+const tokyo = new City("Tokyo", 35.65, 139.83)
+const istanbul = new City("Istanbul", 41.01, 28.97)
+const paris = new City("Paris", 48.86, 2.34)
+const aktau = new City("Aktau", 43.69, 51.26)
+const pyongyang = new City("Pyongyang", 39.01, 125.73)
+
+//
+//
+// Impact
+
+type Impact = {
+    damage: number;
+    healing: number;
+    shield: number;
+    critDamage: number;
+    critHealing: number;
+    critShield: number;
+    phrase: string;
+    crit: boolean;
+}
+
+//
+//
 // Card
 
 class Card {
@@ -57,11 +97,11 @@ class Card {
         this.callback = callback;
     }
 
-    async use(): Promise<string> {return await this.callback()}
+    async use(): Promise<string> {return await this.callback(buenosAires)}
 }
 
-const fireball = new Card("Fireball","fireball.svg", async () => {
-    try {const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=Tashkent&appid=${import.meta.env.VITE_WEATHER_KEY}&units=metric`, {
+const fireball = new Card("Fireball","fireball.svg", async (city: City) => {
+    try {const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${city.latitude}&lon=${city.longitude}&appid=${import.meta.env.VITE_WEATHER_KEY}&units=metric`, {
         method: 'GET',
     })
 
@@ -71,7 +111,17 @@ const fireball = new Card("Fireball","fireball.svg", async () => {
         //@ts-ignore
         let weather = await res.json();
         let result = weather.weather[0].main;
-        return result;
+        const impact: Impact = {
+            damage: 3,
+            healing: 0,
+            shield: 0,
+            critDamage: 3,
+            critHealing: 0,
+            critShield: 0,
+            phrase: `It is ${result} in ${city.name}!`,
+            crit: result === "Clear " ? true : false,
+        }
+        return impact;
     }
 
     } catch(err) {
@@ -79,19 +129,6 @@ const fireball = new Card("Fireball","fireball.svg", async () => {
     }
     
 })
-
-// fetch("https://api.openweathermap.org/data/2.5/weather?q=London&appid=${import.meta.env.VITE_WEATHER_KEY}&units=metric", {
-//     "method": "GET",
-//       })
-//   .then(response => {
-//     console.log(await response.json());
-//   })
-//   .catch(err => {
-//     console.log(err);
-//   });
-
-
-
 
 const cloudShield = new Card("Cloud shield","cloud-shield.svg")
 const cauterizeWounds = new Card("Cauterize wounds", "cauterize-wounds.svg")
@@ -271,10 +308,10 @@ playerHand.fillHand(defaultHandSize,availableCards)
 
 export const playerHandStore = writable(playerHand)
 
-const emenyHand = new Hand("top",30,[],false);
-emenyHand.fillHand(defaultHandSize,availableCards)
+const enemyHand = new Hand("top",30,[],false);
+enemyHand.fillHand(defaultHandSize,availableCards)
 
-export const emenyHandStore = writable(emenyHand)
+export const enemyHandStore = writable(enemyHand)
 
 //
 //
@@ -283,11 +320,18 @@ export const emenyHandStore = writable(emenyHand)
 export class CharacterClass {
     name: string = "weatherman";
     cards: Card[] = [fireball, cloudShield, cauterizeWounds, healingRain, lightning, waterBolt];
+    hometown: {} = {
+        name: "Buenos Aires",
+        latitude: -34.60,
+        longitude: -58.38
+    };
 
     constructor(name: string = "weatherman", 
-    cards: Card[] = [fireball, cloudShield, cauterizeWounds, healingRain, lightning, waterBolt]) {
+    cards: Card[] = [fireball, cloudShield, cauterizeWounds, healingRain, lightning, waterBolt],
+    hometown: string = "London") {
         this.name = name;
         this.cards = cards;
+        this.hometown = hometown;
     }
 }
 

@@ -21,7 +21,8 @@
                     <button class="arrow top" in:fade={{ delay: 250 }} out:fade={{ delay: 250 }} on:click={async () => {
                         localHand.useCard(card.id); 
                         localHand = localHand;
-                        status = await card.card.use()
+                        let impact = await card.card.use();
+                        status = impact.phrase;
                         setTimeout(()=>{localHand.destroyCard(card.id);localHand = localHand;},2000)
                         }}>
                         <img src="/cards/use.svg" alt="use card">

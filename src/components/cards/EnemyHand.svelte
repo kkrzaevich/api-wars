@@ -1,9 +1,9 @@
 <script lang="ts">
-    import { Hand, emenyHandStore } from "../../stores";
+    import { Hand, enemyHandStore } from "../../stores";
     import { fade, fly } from 'svelte/transition';
 
     let localHand: Hand;
-    emenyHandStore.subscribe((hand) => {localHand = hand});
+    enemyHandStore.subscribe((hand) => {localHand = hand});
 
 </script>
 
