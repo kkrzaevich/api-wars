@@ -1,4 +1,8 @@
 import { writable } from 'svelte/store';
+import { City, buenosAires, london, ryanOklahoma, tokyo, istanbul, paris, aktau, pyongyang} from './lib/cities';
+import type { Impact } from './lib/impact';
+import { Card, fireball, cloudShield, cauterizeWounds, healingRain, lightning, waterBolt, availableCards } from './lib/card';
+
 
 export const cards = writable(
     [
@@ -40,109 +44,6 @@ export const globalSelectTopGap = 20;
 export const globalDiscardTop = 200;
 
 export const defaultHandSize = 4;
-
-//
-//
-// Cities
-
-class City {
-    name: string;
-    latitude: number;
-    longitude: number;
-
-    constructor(name: string, latitude: number, longitude: number) {
-        this.name = name;
-        this.latitude = latitude;
-        this.longitude = longitude
-    }
-}
-
-const buenosAires = new City("Buenos Aires", -34.60, -58.38);
-const london = new City("London", 51.50, 0.11);
-const ryanOklahoma = new City("Ryan, Oklahoma", 34.02, -97.95);
-const tokyo = new City("Tokyo", 35.65, 139.83)
-const istanbul = new City("Istanbul", 41.01, 28.97)
-const paris = new City("Paris", 48.86, 2.34)
-const aktau = new City("Aktau", 43.69, 51.26)
-const pyongyang = new City("Pyongyang", 39.01, 125.73)
-
-//
-//
-// Impact
-
-type Impact = {
-    damage: number;
-    healing: number;
-    shield: number;
-    critDamage: number;
-    critHealing: number;
-    critShield: number;
-    phrase: string;
-    crit: boolean;
-}
-
-//
-//
-// Card
-
-class Card {
-    name: string = "Fireball";
-    srcFront: string = "fireball.svg";
-    srcBack: string = "back.svg";
-    callback: Function = () => {}
-
-    constructor(name: string = "Fireball", srcFront: string = "fireball.svg", callback: Function = () => {}) {
-        this.name = name;
-        this.srcFront = srcFront;
-        this.callback = callback;
-    }
-
-    async use(): Promise<string> {return await this.callback(buenosAires)}
-}
-
-const fireball = new Card("Fireball","fireball.svg", async (city: City) => {
-    try {const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${city.latitude}&lon=${city.longitude}&appid=${import.meta.env.VITE_WEATHER_KEY}&units=metric`, {
-        method: 'GET',
-    })
-
-    if (!res.ok) {
-        throw new Error(`An error has occured: ${res.status}`)
-    } else {
-        //@ts-ignore
-        let weather = await res.json();
-        let result = weather.weather[0].main;
-        const impact: Impact = {
-            damage: 3,
-            healing: 0,
-            shield: 0,
-            critDamage: 3,
-            critHealing: 0,
-            critShield: 0,
-            phrase: `It is ${result} in ${city.name}!`,
-            crit: result === "Clear " ? true : false,
-        }
-        return impact;
-    }
-
-    } catch(err) {
-        throw new Error(`An error has occured: ${err}`)
-    }
-    
-})
-
-const cloudShield = new Card("Cloud shield","cloud-shield.svg")
-const cauterizeWounds = new Card("Cauterize wounds", "cauterize-wounds.svg")
-const healingRain = new Card("Healing rain", "healing-rain.svg")
-const lightning = new Card("Lightning", "lightning.svg");
-const waterBolt = new Card("Water bolt", "water-bolt.svg");
-
-// const availableCards: Card[] = [
-//     fireball, cloudShield, cauterizeWounds, healingRain, lightning, waterBolt
-// ]
-
-const availableCards: Card[] = [
-    fireball, fireball, fireball, fireball, fireball, waterBolt
-]
 
 //
 //
