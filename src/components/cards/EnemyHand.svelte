@@ -1,5 +1,6 @@
 <script lang="ts">
-    import { Hand, enemyHandStore } from "../../stores";
+    import { enemyHandStore } from "../../stores";
+    import { Hand } from "../../lib/hand";
     import { fade, fly } from 'svelte/transition';
 
     let localHand: Hand;
