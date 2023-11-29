@@ -1,17 +1,28 @@
 <script lang="ts">
     import Health from "../health/Health.svelte";
+    import { player, enemy } from "../../stores";
+
+    let playerHealth: number = 30; 
+    let playerShield: number = 0; 
+
+    let enemyHealth: number = 30; 
+    let enemyShield: number = 0; 
+
+    player.subscribe((player) => {playerHealth = player.health; playerShield = player.shield;});
+    enemy.subscribe((enemy) => {enemyHealth = enemy.health; enemyShield = enemy.shield;});
+
 </script>
 
 <main>
     <div class="health-left">
-        <Health />
+        <Health health={playerHealth} shield={playerShield}/>
     </div>
     <div class="stage">
         <img src="/players/player1.svg" alt="player 1">
         <img src="/players/player2.svg" alt="player 2">
     </div>
     <div class="health-right">
-        <Health />        
+        <Health health={enemyHealth} shield={enemyShield}/>        
     </div>
 </main>
 

@@ -1,10 +1,10 @@
 <script lang="ts">
-    import { playerHandStore } from "../../stores";
+    import { player } from "../../stores";
     import { Hand } from "../../lib/hand";
     import { fade, fly } from 'svelte/transition';
 
     let localHand: Hand; 
-    playerHandStore.subscribe((hand) => {localHand = hand});
+    player.subscribe((player) => {localHand = player.hand});
 
     $: status = "";
 

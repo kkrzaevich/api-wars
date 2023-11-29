@@ -7,6 +7,7 @@ import { globalCardWidth, globalHoverCardWidth, globalSelectCardWidth, globalGap
     globalDiscardTop, defaultHandSize } from './lib/globalVariables';
 import { CardInHand, fireballInHand} from './lib/cardInHand';
 import { Hand, playerHand, enemyHand } from './lib/hand';
+import { Player, player1, player2 } from './lib/player';
 
 export const cards = writable(
     [
@@ -30,6 +31,6 @@ export const cards = writable(
     ]
 );
 
-export const playerHandStore = writable(playerHand)
+export const player = writable(player1)
 
-export const enemyHandStore = writable(enemyHand)
+export const enemy = writable(player2)

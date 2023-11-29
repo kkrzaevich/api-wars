@@ -1,5 +1,5 @@
 import { weatherman, type CharacterClass } from "./characterClass";
-import { playerHand, type Hand } from "./hand";
+import { playerHand, enemyHand, type Hand } from "./hand";
 
 //
 //
@@ -24,3 +24,4 @@ export class Player {
 }
 
 export const player1 = new Player;
+export const player2 = new Player("Player 2", enemyHand);
