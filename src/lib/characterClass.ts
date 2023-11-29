@@ -21,3 +21,5 @@ export class CharacterClass {
         this.hometown = hometown;
     }
 }
+
+export const weatherman = new CharacterClass;
