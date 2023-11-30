@@ -17,6 +17,8 @@ export class Card {
         this.callback = callback;
     }
 
+    // Работаем здесь
+
     async use(): Promise<Impact> {return await this.callback(buenosAires)}
 }
 

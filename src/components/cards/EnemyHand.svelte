@@ -1,10 +1,10 @@
 <script lang="ts">
-    import { enemyHandStore } from "../../stores";
+    import { enemy, player } from "../../stores";
     import { Hand } from "../../lib/hand";
     import { fade, fly } from 'svelte/transition';
 
     let localHand: Hand;
-    enemyHandStore.subscribe((hand) => {localHand = hand});
+    enemy.subscribe((enemy) => {localHand = enemy.hand});
 
 </script>
 
