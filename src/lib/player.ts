@@ -1,5 +1,7 @@
-import { weatherman, type CharacterClass } from "./characterClass";
-import { playerHand, enemyHand, type Hand } from "./hand";
+import type { CharacterClass } from "./characterClass";
+import type { Hand } from "./hand";
+import { weatherman } from "./characterClass";
+import { playerHand, enemyHand } from "./hand";
 
 //
 //
@@ -14,7 +16,7 @@ export class Player {
 
     constructor(
         name: "Player 1" | "Player 2" = "Player 1",
-        hand: Hand = playerHand,
+        hand: Hand,
         characterClass: CharacterClass = weatherman
     ) {
         this.name = name;
@@ -23,5 +25,5 @@ export class Player {
     }
 }
 
-export const player1 = new Player;
+export const player1 = new Player("Player 1", playerHand);
 export const player2 = new Player("Player 2", enemyHand);

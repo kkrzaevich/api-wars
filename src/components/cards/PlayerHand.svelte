@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { player } from "../../stores";
+    import { player, enemy } from "../../stores";
     import { Hand } from "../../lib/hand";
     import { fade, fly } from 'svelte/transition';
 
@@ -22,7 +22,7 @@
                     <button class="arrow top" in:fade={{ delay: 250 }} out:fade={{ delay: 250 }} on:click={async () => {
                         localHand.useCard(card.id); 
                         localHand = localHand;
-                        let impact = await card.card.use();
+                        let impact = await card.card.use(player, enemy);
                         status = impact.phrase;
                         setTimeout(()=>{localHand.destroyCard(card.id);localHand = localHand;},2000)
                         }}>

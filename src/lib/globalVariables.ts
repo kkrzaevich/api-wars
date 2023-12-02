@@ -16,3 +16,5 @@ export const globalSelectTopGap = 20;
 export const globalDiscardTop = 200;
 
 export const defaultHandSize = 4;
+
+export const critTime = 2000;

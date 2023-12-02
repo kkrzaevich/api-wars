@@ -1,4 +1,6 @@
 import { Card, fireball, cloudShield, cauterizeWounds, healingRain, lightning, waterBolt, availableCards } from './card';
+import type { City } from './cities';
+import { buenosAires, london, ryanOklahoma, tokyo, istanbul, paris, aktau, pyongyang} from './cities';
 
 //
 //
@@ -7,15 +9,11 @@ import { Card, fireball, cloudShield, cauterizeWounds, healingRain, lightning, w
 export class CharacterClass {
     name: string = "weatherman";
     cards: Card[] = [fireball, cloudShield, cauterizeWounds, healingRain, lightning, waterBolt];
-    hometown: {} = {
-        name: "Buenos Aires",
-        latitude: -34.60,
-        longitude: -58.38
-    };
+    hometown: City = buenosAires;
 
     constructor(name: string = "weatherman", 
     cards: Card[] = [fireball, cloudShield, cauterizeWounds, healingRain, lightning, waterBolt],
-    hometown: string = "London") {
+    hometown: City = buenosAires) {
         this.name = name;
         this.cards = cards;
         this.hometown = hometown;

@@ -1,8 +1,11 @@
-import { Card, fireball, cloudShield, cauterizeWounds, healingRain, lightning, waterBolt, availableCards } from './card';
+import type { Card } from './card';
+import type { Writable } from 'svelte/store';
+import { fireball, cloudShield, cauterizeWounds, healingRain, lightning, waterBolt, availableCards } from './card';
 import { globalCardWidth, globalHoverCardWidth, globalSelectCardWidth, globalGap,
     globalHoverGap, globalHoverTopGap, globalSelectLeft, globalSelectTopGap, 
     globalDiscardTop, defaultHandSize } from './globalVariables';
 import { CardInHand, fireballInHand} from './cardInHand';
+
 
 //
 //
