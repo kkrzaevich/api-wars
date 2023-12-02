@@ -5,6 +5,8 @@ import type { Player } from "./player";
 
 import { buenosAires, london, ryanOklahoma, tokyo, istanbul, paris, aktau, pyongyang} from './cities';
 import { critTime } from "./globalVariables";
+import type { Conditions } from "./conditions";
+import { conditions } from "./conditions";
 
 
 //
@@ -15,7 +17,7 @@ export class Card {
     name: string = "Fireball";
     srcFront: string = "fireball.svg";
     srcBack: string = "back.svg";
-    callback: Function = () => {}
+    callback: Function = (conditions: Conditions) => {}
 
     constructor(name: string = "Fireball", srcFront: string = "fireball.svg", callback: Function = () => {}) {
         this.name = name;
@@ -24,13 +26,7 @@ export class Card {
     }
 
     async use(player?: Writable<Player>, enemy?: Writable<Player>): Promise<Impact> {
-        let city : City;
-
-        if (enemy) {
-            enemy.subscribe((enemy) => city = enemy.characterClass.hometown)
-        }
-
-        let impact = await this.callback(buenosAires);
+        let impact = await this.callback(conditions);
 
         if (player) {
             player.update((player) => {
@@ -91,7 +87,9 @@ export class Card {
 
 // Fireball
 
-export const fireball = new Card("Fireball","fireball.svg", async (city: City) => {
+export const fireball = new Card("Fireball","fireball.svg", async (conditions: Conditions) => {
+    const city = conditions.enemyCity;
+
     try {const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${city.latitude}&lon=${city.longitude}&appid=${import.meta.env.VITE_WEATHER_KEY}&units=metric`, {
         method: 'GET',
     })
@@ -110,7 +108,7 @@ export const fireball = new Card("Fireball","fireball.svg", async (city: City) =
             critHealing: 0,
             critShield: 0,
             phrase: `The weather in ${city.name} is ${result}!`,
-            crit: result === "Clear" ? true : false,
+            crit: result === "Rain" || "Thunderstorm" ? true : false,
         }
         return impact;
     }
@@ -122,7 +120,9 @@ export const fireball = new Card("Fireball","fireball.svg", async (city: City) =
 
 // Water bolt
 
-export const waterBolt = new Card("Water bolt", "water-bolt.svg", async (city: City) => {
+export const waterBolt = new Card("Water bolt", "water-bolt.svg", async (conditions: Conditions) => {
+    const city = conditions.enemyCity;
+
     try {const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${city.latitude}&lon=${city.longitude}&appid=${import.meta.env.VITE_WEATHER_KEY}&units=metric`, {
         method: 'GET',
     })
@@ -153,11 +153,136 @@ export const waterBolt = new Card("Water bolt", "water-bolt.svg", async (city: C
 
 // Lightning
 
-export const cloudShield = new Card("Cloud shield","cloud-shield.svg")
-export const cauterizeWounds = new Card("Cauterize wounds", "cauterize-wounds.svg")
-export const healingRain = new Card("Healing rain", "healing-rain.svg")
-export const lightning = new Card("Lightning", "lightning.svg");
+export const lightning = new Card("Lightning", "lightning.svg", async (conditions: Conditions) => {
+    const city = conditions.enemyCity;
+
+    try {const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${city.latitude}&lon=${city.longitude}&appid=${import.meta.env.VITE_WEATHER_KEY}&units=metric`, {
+        method: 'GET',
+    })
+
+    if (!res.ok) {
+        throw new Error(`An error has occured: ${res.status}`)
+    } else {
+        //@ts-ignore
+        let weather = await res.json();
+        let result : string = weather.weather[0].main;
+        const impact: Impact = {
+            damage: 3,
+            healing: 0,
+            shield: 0,
+            critDamage: 3,
+            critHealing: 0,
+            critShield: 0,
+            phrase: `The weather in ${city.name} is ${result}!`,
+            crit: result === "Clear" ? true : false,
+        }
+        return impact;
+    }
+
+    } catch(err) {
+        throw new Error(`An error has occured: ${err}`)
+    }
+})
+
+// Cloud Shield
+
+export const cloudShield = new Card("Cloud shield","cloud-shield.svg", async (conditions: Conditions) => {
+    const city = conditions.arenaCity;
+
+    try {const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${city.latitude}&lon=${city.longitude}&appid=${import.meta.env.VITE_WEATHER_KEY}&units=metric`, {
+        method: 'GET',
+    })
+
+    if (!res.ok) {
+        throw new Error(`An error has occured: ${res.status}`)
+    } else {
+        //@ts-ignore
+        let weather = await res.json();
+        let result : string = weather.weather[0].main;
+        const impact: Impact = {
+            damage: 0,
+            healing: 0,
+            shield: 5,
+            critDamage: 0,
+            critHealing: 0,
+            critShield: 5,
+            phrase: `The weather in ${city.name} is ${result}!`,
+            crit: result === "Clouds" ? true : false,
+        }
+        return impact;
+    }
+
+    } catch(err) {
+        throw new Error(`An error has occured: ${err}`)
+    }
+})
+
+// Cauterize Wounds
+
+export const cauterizeWounds = new Card("Cauterize wounds", "cauterize-wounds.svg", async (conditions: Conditions) => {
+    const city = conditions.playerCity;
+
+    try {const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${city.latitude}&lon=${city.longitude}&appid=${import.meta.env.VITE_WEATHER_KEY}&units=metric`, {
+        method: 'GET',
+    })
+
+    if (!res.ok) {
+        throw new Error(`An error has occured: ${res.status}`)
+    } else {
+        //@ts-ignore
+        let weather = await res.json();
+        let result : string = weather.weather[0].main;
+        const impact: Impact = {
+            damage: 0,
+            healing: 3,
+            shield: 0,
+            critDamage: 0,
+            critHealing: 3,
+            critShield: 0,
+            phrase: `The weather in ${city.name} is ${result}!`,
+            crit: result === "Clear" ? true : false,
+        }
+        return impact;
+    }
+
+    } catch(err) {
+        throw new Error(`An error has occured: ${err}`)
+    }
+})
+
+// Heaing Rain
+
+export const healingRain = new Card("Healing rain", "healing-rain.svg", async (conditions: Conditions) => {
+    const city = conditions.playerCity;
+
+    try {const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${city.latitude}&lon=${city.longitude}&appid=${import.meta.env.VITE_WEATHER_KEY}&units=metric`, {
+        method: 'GET',
+    })
+
+    if (!res.ok) {
+        throw new Error(`An error has occured: ${res.status}`)
+    } else {
+        //@ts-ignore
+        let weather = await res.json();
+        let result : string = weather.weather[0].main;
+        const impact: Impact = {
+            damage: 0,
+            healing: 3,
+            shield: 0,
+            critDamage: 0,
+            critHealing: 3,
+            critShield: 0,
+            phrase: `The weather in ${city.name} is ${result}!`,
+            crit: result === "Rain" || "Thunderstorm" ? true : false,
+        }
+        return impact;
+    }
+
+    } catch(err) {
+        throw new Error(`An error has occured: ${err}`)
+    }
+})
 
 export const availableCards: Card[] = [
-    fireball, fireball, fireball, fireball, fireball, waterBolt
+    fireball, waterBolt, lightning, cloudShield, cauterizeWounds, healingRain
 ]

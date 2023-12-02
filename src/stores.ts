@@ -8,6 +8,7 @@ import { globalCardWidth, globalHoverCardWidth, globalSelectCardWidth, globalGap
 import { CardInHand, fireballInHand} from './lib/cardInHand';
 import { Hand, playerHand, enemyHand } from './lib/hand';
 import { Player, player1, player2 } from './lib/player';
+import { conditions } from './lib/conditions';
 
 export const cards = writable(
     [
@@ -34,3 +35,6 @@ export const cards = writable(
 export const player = writable(player1)
 
 export const enemy = writable(player2)
+
+player.subscribe(player => {conditions.playerCity = player.characterClass.hometown})
+enemy.subscribe(enemy => {conditions.enemyCity = enemy.characterClass.hometown})
