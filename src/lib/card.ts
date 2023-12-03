@@ -141,7 +141,7 @@ export const waterBolt = new Card("Water bolt", "water-bolt.svg", async (conditi
             critHealing: 0,
             critShield: 0,
             phrase: `The weather in ${city.name} is ${result}!`,
-            crit: result === "Clear" ? true : false,
+            crit: result === "Rain" ? true : false,
         }
         return impact;
     }
@@ -174,7 +174,7 @@ export const lightning = new Card("Lightning", "lightning.svg", async (condition
             critHealing: 0,
             critShield: 0,
             phrase: `The weather in ${city.name} is ${result}!`,
-            crit: result === "Clear" ? true : false,
+            crit: result === "Thunderstorm" ? true : false,
         }
         return impact;
     }
