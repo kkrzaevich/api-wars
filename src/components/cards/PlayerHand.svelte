@@ -2,6 +2,7 @@
     import { player, enemy } from "../../stores";
     import { Hand } from "../../lib/hand";
     import { fade, fly } from 'svelte/transition';
+    import { timeline } from "../../stores";
 
     let localHand: Hand; 
     player.subscribe((player) => {localHand = player.hand});

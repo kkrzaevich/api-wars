@@ -1,3 +1,4 @@
+import { timeline } from "../stores";
 //
 //
 // Global variables
@@ -15,6 +16,6 @@ export const globalSelectTopGap = 20;
 
 export const globalDiscardTop = 200;
 
-export const defaultHandSize = 4;
+export const defaultHandSize = 6;
 
 export const critTime = 2000;

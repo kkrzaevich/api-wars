@@ -1,6 +1,7 @@
 import { Card, fireball, cloudShield, cauterizeWounds, healingRain, lightning, waterBolt, availableCards } from './card';
 import type { City } from './cities';
 import { buenosAires, london, ryanOklahoma, tokyo, istanbul, paris, aktau, pyongyang} from './cities';
+import { timeline } from "../stores";
 
 //
 //

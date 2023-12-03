@@ -1,6 +1,8 @@
 <script lang="ts">
     import Health from "../health/Health.svelte";
     import { player, enemy } from "../../stores";
+    import { timeline } from "../../stores";
+    import type { Stage } from "../../lib/timeline";
 
     let playerHealth: number = 30; 
     let playerShield: number = 0; 
@@ -11,8 +13,12 @@
     player.subscribe((player) => {playerHealth = player.health; playerShield = player.shield;});
     enemy.subscribe((enemy) => {enemyHealth = enemy.health; enemyShield = enemy.shield;});
 
+    let localTime : Stage;
+    timeline.subscribe((timeline) => {localTime = timeline.stages[timeline.currentStage]})
+
 </script>
 
+<p>{`It is ${localTime.turn}'s turn. The phase is ${localTime.phase}.`}</p>
 <main>
     <div class="health-left">
         <Health health={playerHealth} shield={playerShield}/>

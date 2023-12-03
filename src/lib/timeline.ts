@@ -2,17 +2,73 @@
 //
 // Timeline
 
-export class Timeline {
-    turn: "player" | "enemy";
-    phase: "dealing-cards" | "player-select" | "player-use" | "player-crit" | "enemy-select" | "enemy-use" | "enemy-crit";
+export type Stage = {
+    turn: "player" | "enemy",
+    phase: "dealing-cards" | "select-card" | "use-card" | "crit";
+    delay: number
+}
 
-    constructor(turn: "player" | "enemy",
-        phase: "dealing-cards" | "player-select" | "player-use" | "player-crit" | "enemy-select" | "enemy-use" | "enemy-crit"
-     = "dealing-cards") {
-        this.turn = turn;
-        this.phase = phase;
+export class Timeline {
+    stages: Stage[] =  [
+        {
+            turn: "player",
+            phase: "dealing-cards",
+            delay: 1000,
+        },
+        {
+            turn: "player",
+            phase: "select-card",
+            delay: 0,
+        },
+        {
+            turn: "player",
+            phase: "use-card",
+            delay: 5000,
+        },
+        {
+            turn: "player",
+            phase: "crit",
+            delay: 1000,
+        },
+        {
+            turn: "enemy",
+            phase: "dealing-cards",
+            delay: 1000,
+        },
+        {
+            turn: "enemy",
+            phase: "select-card",
+            delay: 1000,
+        },
+        {
+            turn: "enemy",
+            phase: "use-card",
+            delay: 1000,
+        },
+        {
+            turn: "enemy",
+            phase: "crit",
+            delay: 1000,
+        },
+    ]
+    currentStage: number = 1;
+
+    move() {
+        setTimeout(
+            ()=>{
+                if (this.currentStage < this.stages.length-1) {
+                    this.currentStage++
+                } else {
+                    this.currentStage = 0;
+                }
+
+            },
+            this.stages[this.currentStage].delay
+        );
     }
 }
+
+export const timeline1 = new Timeline;
 
 /* На что влияют фазы?
 0. Нужна ли фаза dealing-cards?

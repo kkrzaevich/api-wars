@@ -4,9 +4,10 @@ import type { Writable } from "svelte/store";
 import type { Player } from "./player";
 
 import { buenosAires, london, ryanOklahoma, tokyo, istanbul, paris, aktau, pyongyang} from './cities';
-import { critTime } from "./globalVariables";
 import type { Conditions } from "./conditions";
 import { conditions } from "./conditions";
+
+import { timeline } from "../stores";
 
 
 //
@@ -26,6 +27,12 @@ export class Card {
     }
 
     async use(player?: Writable<Player>, enemy?: Writable<Player>): Promise<Impact> {
+        let critTime;
+        timeline.update(timeline => {critTime = timeline.stages[timeline.currentStage].delay; 
+            console.log(`It is ${timeline.stages[timeline.currentStage].turn}'s turn. The phase is ${timeline.stages[timeline.currentStage].phase} .The delay is ${timeline.stages[timeline.currentStage].delay}.`)
+            timeline.move();  
+            return timeline})
+
         let impact = await this.callback(conditions);
 
         if (player) {
@@ -52,8 +59,13 @@ export class Card {
             })
         }
 
-        if (impact.crit) {
-            setTimeout(() => {
+
+        setTimeout(() => {
+            timeline.update(timeline => {
+                timeline.move();
+                console.log(`It is ${timeline.stages[timeline.currentStage].turn}'s turn. The phase is ${timeline.stages[timeline.currentStage].phase} .The delay is ${timeline.stages[timeline.currentStage].delay}.`)
+                return timeline})
+            if (impact.crit) {
                 if (player) {
                     player.update((player) => {
                         player.health += impact.critHealing;
@@ -74,12 +86,14 @@ export class Card {
                                 }
                             }
                         }
-       
+    
                         return enemy;
                     })
                 }
-            }, critTime)
-        }
+            }
+        }, critTime)
+
+        
 
         return impact
     }

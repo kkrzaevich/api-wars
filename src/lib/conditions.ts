@@ -2,6 +2,7 @@ import type { Writable } from "svelte/store";
 import type { City } from "./cities"
 import { player, enemy } from "../stores";
 import { buenosAires, london, ryanOklahoma, tokyo, istanbul, paris, aktau, pyongyang} from './cities';
+import { timeline } from "../stores";
 
 export type Conditions = {
     playerCity: City;

@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { timeline } from "../../stores";
     export let health = 30;
     export let shield = 0;
 </script>

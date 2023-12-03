@@ -2,6 +2,7 @@ import type { CharacterClass } from "./characterClass";
 import type { Hand } from "./hand";
 import { weatherman } from "./characterClass";
 import { playerHand, enemyHand } from "./hand";
+import { timeline } from "../stores";
 
 //
 //

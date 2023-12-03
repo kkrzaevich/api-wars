@@ -5,6 +5,7 @@ import { globalCardWidth, globalHoverCardWidth, globalSelectCardWidth, globalGap
     globalHoverGap, globalHoverTopGap, globalSelectLeft, globalSelectTopGap, 
     globalDiscardTop, defaultHandSize } from './globalVariables';
 import { CardInHand, fireballInHand} from './cardInHand';
+import { timeline } from "../stores";
 
 
 //
@@ -125,7 +126,6 @@ export class Hand {
             currentCard.state = 'inUse';
         }
         this.renderCards();
-        currentCard?.card.use()
     }
 
     destroyCard(cardId: number) {

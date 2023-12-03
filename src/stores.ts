@@ -9,6 +9,7 @@ import { CardInHand, fireballInHand} from './lib/cardInHand';
 import { Hand, playerHand, enemyHand } from './lib/hand';
 import { Player, player1, player2 } from './lib/player';
 import { conditions } from './lib/conditions';
+import { timeline1 } from './lib/timeline';
 
 export const cards = writable(
     [
@@ -38,3 +39,6 @@ export const enemy = writable(player2)
 
 player.subscribe(player => {conditions.playerCity = player.characterClass.hometown})
 enemy.subscribe(enemy => {conditions.enemyCity = enemy.characterClass.hometown})
+
+export const timeline = writable(timeline1);
+

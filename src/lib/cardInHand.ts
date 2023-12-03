@@ -3,6 +3,7 @@ import { fireball, cloudShield, cauterizeWounds, healingRain, lightning, waterBo
 import { globalCardWidth, globalHoverCardWidth, globalSelectCardWidth, globalGap,
     globalHoverGap, globalHoverTopGap, globalSelectLeft, globalSelectTopGap, 
     globalDiscardTop, defaultHandSize } from './globalVariables';
+import { timeline } from "../stores";
 
 //
 //
