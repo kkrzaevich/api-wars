@@ -27,74 +27,72 @@ export class Card {
     }
 
     async use(player?: Writable<Player>, enemy?: Writable<Player>): Promise<Impact> {
-        let critTime;
-        timeline.update(timeline => {critTime = timeline.stages[timeline.currentStage].delay; 
-            console.log(`It is ${timeline.stages[timeline.currentStage].turn}'s turn. The phase is ${timeline.stages[timeline.currentStage].phase} .The delay is ${timeline.stages[timeline.currentStage].delay}.`)
-            timeline.move();  
-            return timeline})
-
         let impact = await this.callback(conditions);
 
-        if (player) {
-            player.update((player) => {
-                player.health += impact.healing;
-                player.shield += impact.shield;
-
-                return player;
-            })
-        }
-
-        if (enemy) {
-            enemy.update((enemy) => {
-                if (impact.damage > 0) {
-                    for (let i = 0; i<impact.damage; i++) {
-                        if (enemy.shield > 0) {
-                            enemy.shield -= 1;
-                        } else if (enemy.health > 0) {
-                            enemy.health -= 1;
-                        }
+        let critTime;
+        timeline.update(timelineInner => {critTime = timelineInner.stages[timelineInner.currentStage].delay; 
+            timelineInner.move(
+                () => {
+                    if (player) {
+                        player.update((player) => {
+                            player.health += impact.healing;
+                            player.shield += impact.shield;
+            
+                            return player;
+                        })
                     }
-                }
-                return enemy;
-            })
-        }
-
-
-        setTimeout(() => {
-            timeline.update(timeline => {
-                timeline.move();
-                console.log(`It is ${timeline.stages[timeline.currentStage].turn}'s turn. The phase is ${timeline.stages[timeline.currentStage].phase} .The delay is ${timeline.stages[timeline.currentStage].delay}.`)
-                return timeline})
-            if (impact.crit) {
-                if (player) {
-                    player.update((player) => {
-                        player.health += impact.critHealing;
-                        player.shield += impact.critShield;
-        
-                        return player;
-                    })
-                }
-        
-                if (enemy) {
-                    enemy.update((enemy) => {
-                        if (impact.critDamage > 0) {
-                            for (let i = 0; i<impact.critDamage; i++) {
-                                if (enemy.shield > 0) {
-                                    enemy.shield -= 1;
-                                } else if (enemy.health > 0) {
-                                    enemy.health -= 1;
+            
+                    if (enemy) {
+                        enemy.update((enemy) => {
+                            if (impact.damage > 0) {
+                                for (let i = 0; i<impact.damage; i++) {
+                                    if (enemy.shield > 0) {
+                                        enemy.shield -= 1;
+                                    } else if (enemy.health > 0) {
+                                        enemy.health -= 1;
+                                    }
                                 }
                             }
-                        }
-    
-                        return enemy;
-                    })
+                            return enemy;
+                        })
+                    }
+
+                    timeline.update(timelineInnerDeep => {
+                        timelineInnerDeep.move(
+                            () => {
+                                if (impact.crit) {
+                                    if (player) {
+                                        player.update((player) => {
+                                            player.health += impact.critHealing;
+                                            player.shield += impact.critShield;
+                            
+                                            return player;
+                                        })
+                                    }
+                            
+                                    if (enemy) {
+                                        enemy.update((enemy) => {
+                                            if (impact.critDamage > 0) {
+                                                for (let i = 0; i<impact.critDamage; i++) {
+                                                    if (enemy.shield > 0) {
+                                                        enemy.shield -= 1;
+                                                    } else if (enemy.health > 0) {
+                                                        enemy.health -= 1;
+                                                    }
+                                                }
+                                            }
+                        
+                                            return enemy;
+                                        })
+                                    }
+                                }
+                            }
+                        );
+                        return timelineInnerDeep})
                 }
-            }
-        }, critTime)
-
-        
-
+            );  
+            return timelineInner})
+     
         return impact
     }
 }

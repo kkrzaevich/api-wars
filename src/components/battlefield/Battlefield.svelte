@@ -14,11 +14,18 @@
     enemy.subscribe((enemy) => {enemyHealth = enemy.health; enemyShield = enemy.shield;});
 
     let localTime : Stage;
+    // Вот здесь что-то не работает
+    // Попробовать реализовать задание конкретных значений таймлайна?
     timeline.subscribe((timeline) => {localTime = timeline.stages[timeline.currentStage]})
 
 </script>
 
 <p>{`It is ${localTime.turn}'s turn. The phase is ${localTime.phase}.`}</p>
+<button on:click={
+    () => {
+        timeline.subscribe((timeline) => {console.log("The phase is ",timeline.stages[timeline.currentStage].phase)});
+    }
+}>PRESS ME</button>
 <main>
     <div class="health-left">
         <Health health={playerHealth} shield={playerShield}/>

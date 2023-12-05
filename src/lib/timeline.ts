@@ -53,7 +53,7 @@ export class Timeline {
     ]
     currentStage: number = 1;
 
-    move() {
+    move(callback? : Function) {
         setTimeout(
             ()=>{
                 if (this.currentStage < this.stages.length-1) {
@@ -61,7 +61,8 @@ export class Timeline {
                 } else {
                     this.currentStage = 0;
                 }
-
+                if (callback) {callback()}
+                console.log(`It is ${this.stages[this.currentStage].turn}'s turn. The phase is ${this.stages[this.currentStage].phase} .The delay is ${this.stages[this.currentStage].delay}.`)
             },
             this.stages[this.currentStage].delay
         );
