@@ -7,6 +7,8 @@ import { buenosAires, london, ryanOklahoma, tokyo, istanbul, paris, aktau, pyong
 import type { Conditions } from "./conditions";
 import { conditions } from "./conditions";
 
+import { Timeline, timeline1 } from "./timeline";
+
 import { timeline } from "../stores";
 
 
@@ -29,69 +31,91 @@ export class Card {
     async use(player?: Writable<Player>, enemy?: Writable<Player>): Promise<Impact> {
         let impact = await this.callback(conditions);
 
-        let critTime;
-        timeline.update(timelineInner => {critTime = timelineInner.stages[timelineInner.currentStage].delay; 
-            timelineInner.move(
-                () => {
-                    if (player) {
-                        player.update((player) => {
-                            player.health += impact.healing;
-                            player.shield += impact.shield;
-            
-                            return player;
-                        })
-                    }
-            
-                    if (enemy) {
-                        enemy.update((enemy) => {
-                            if (impact.damage > 0) {
-                                for (let i = 0; i<impact.damage; i++) {
-                                    if (enemy.shield > 0) {
-                                        enemy.shield -= 1;
-                                    } else if (enemy.health > 0) {
-                                        enemy.health -= 1;
-                                    }
-                                }
-                            }
-                            return enemy;
-                        })
-                    }
+        timeline.update(timeline => {
+            if (timeline.phase === "player-select-card") {
+                timeline.phase = "player-use-card"
+            } else if (timeline.phase === "enemy-select-card") {
+                timeline.phase = "enemy-use-card"
+            }
+            return timeline
+        })
 
-                    timeline.update(timelineInnerDeep => {
-                        timelineInnerDeep.move(
-                            () => {
-                                if (impact.crit) {
-                                    if (player) {
-                                        player.update((player) => {
-                                            player.health += impact.critHealing;
-                                            player.shield += impact.critShield;
-                            
-                                            return player;
-                                        })
-                                    }
-                            
-                                    if (enemy) {
-                                        enemy.update((enemy) => {
-                                            if (impact.critDamage > 0) {
-                                                for (let i = 0; i<impact.critDamage; i++) {
-                                                    if (enemy.shield > 0) {
-                                                        enemy.shield -= 1;
-                                                    } else if (enemy.health > 0) {
-                                                        enemy.health -= 1;
-                                                    }
-                                                }
-                                            }
-                        
-                                            return enemy;
-                                        })
-                                    }
+        if (player) {
+            player.update((player) => {
+                player.health += impact.healing;
+                player.shield += impact.shield;
+
+                return player;
+            })
+        }
+
+        if (enemy) {
+            enemy.update((enemy) => {
+                if (impact.damage > 0) {
+                    for (let i = 0; i<impact.damage; i++) {
+                        if (enemy.shield > 0) {
+                            enemy.shield -= 1;
+                        } else if (enemy.health > 0) {
+                            enemy.health -= 1;
+                        }
+                    }
+                }
+                return enemy;
+            })
+        }
+
+        setTimeout(() => {
+            timeline.update(timeline => {
+                if (timeline.phase === "player-use-card") {
+                    timeline.phase = "player-crit"
+                } else if (timeline.phase === "enemy-use-card") {
+                    timeline.phase = "enemy-crit"
+                }
+                return timeline
+            })
+
+            if (impact.crit) {
+                if (player) {
+                    player.update((player) => {
+                        player.health += impact.critHealing;
+                        player.shield += impact.critShield;
+        
+                        return player;
+                    })
+                }
+        
+                if (enemy) {
+                    enemy.update((enemy) => {
+                        if (impact.critDamage > 0) {
+                            for (let i = 0; i<impact.critDamage; i++) {
+                                if (enemy.shield > 0) {
+                                    enemy.shield -= 1;
+                                } else if (enemy.health > 0) {
+                                    enemy.health -= 1;
                                 }
                             }
-                        );
-                        return timelineInnerDeep})
+                        }
+    
+                        return enemy;
+                    })
                 }
-            );  
-            return timelineInner})
+            }
+        }, timeline1.critDelay)
+        // timeline.update(timelineInner => {critTime = timelineInner.stages[timelineInner.currentStage].delay; 
+        //     timelineInner.move(
+        //         () => {
+
+
+        //             timeline.update(timelineInnerDeep => {
+        //                 timelineInnerDeep.move(
+        //                     () => {
+
+                        //     }
+                        // );
+        //                 return timelineInnerDeep})
+        //         }
+        //     );  
+        //     return timelineInner})
      
         return impact
     }

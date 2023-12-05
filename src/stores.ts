@@ -43,6 +43,6 @@ enemy.subscribe(enemy => {conditions.enemyCity = enemy.characterClass.hometown})
 export const timeline = writable(timeline1);
 
 timeline.subscribe(
-    timeline => {console.log(`Current stage is ${timeline.stages[timeline.currentStage].phase}`)}
+    timeline => {console.log(`Current stage is ${timeline.phase}`)}
 )
 

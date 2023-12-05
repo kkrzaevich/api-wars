@@ -2,7 +2,7 @@
     import Health from "../health/Health.svelte";
     import { player, enemy } from "../../stores";
     import { timeline } from "../../stores";
-    import type { Stage } from "../../lib/timeline";
+    import { Timeline } from "../../lib/timeline";
 
     let playerHealth: number = 30; 
     let playerShield: number = 0; 
@@ -13,17 +13,17 @@
     player.subscribe((player) => {playerHealth = player.health; playerShield = player.shield;});
     enemy.subscribe((enemy) => {enemyHealth = enemy.health; enemyShield = enemy.shield;});
 
-    let localTime : Stage;
+    let localTime: Timeline;
     // Вот здесь что-то не работает
     // Попробовать реализовать задание конкретных значений таймлайна?
-    timeline.subscribe((timeline) => {localTime = timeline.stages[timeline.currentStage]})
+    timeline.subscribe((timeline) => {localTime = timeline})
 
 </script>
 
-<p>{`It is ${localTime.turn}'s turn. The phase is ${localTime.phase}.`}</p>
+<p>{`The phase is ${localTime.phase}.`}</p>
 <button on:click={
     () => {
-        timeline.subscribe((timeline) => {console.log("The phase is ",timeline.stages[timeline.currentStage].phase)});
+        timeline.subscribe((timeline) => {console.log("The phase is ",timeline.phase)});
     }
 }>PRESS ME</button>
 <main>

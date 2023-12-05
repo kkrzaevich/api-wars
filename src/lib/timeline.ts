@@ -3,70 +3,15 @@
 // Timeline
 
 export type Stage = {
-    turn: "player" | "enemy",
-    phase: "dealing-cards" | "select-card" | "use-card" | "crit";
-    delay: number
+    phase: "dealing-cards" | "player-select-card" | "player-use-card" | "player-crit" | "enemy-select-card" | "enemy-use-card" | "enemy-crit";
 }
 
 export class Timeline {
-    stages: Stage[] =  [
-        {
-            turn: "player",
-            phase: "dealing-cards",
-            delay: 1000,
-        },
-        {
-            turn: "player",
-            phase: "select-card",
-            delay: 0,
-        },
-        {
-            turn: "player",
-            phase: "use-card",
-            delay: 5000,
-        },
-        {
-            turn: "player",
-            phase: "crit",
-            delay: 1000,
-        },
-        {
-            turn: "enemy",
-            phase: "dealing-cards",
-            delay: 1000,
-        },
-        {
-            turn: "enemy",
-            phase: "select-card",
-            delay: 1000,
-        },
-        {
-            turn: "enemy",
-            phase: "use-card",
-            delay: 1000,
-        },
-        {
-            turn: "enemy",
-            phase: "crit",
-            delay: 1000,
-        },
-    ]
-    currentStage: number = 1;
-
-    move(callback? : Function) {
-        setTimeout(
-            ()=>{
-                if (this.currentStage < this.stages.length-1) {
-                    this.currentStage++
-                } else {
-                    this.currentStage = 0;
-                }
-                if (callback) {callback()}
-                console.log(`It is ${this.stages[this.currentStage].turn}'s turn. The phase is ${this.stages[this.currentStage].phase} .The delay is ${this.stages[this.currentStage].delay}.`)
-            },
-            this.stages[this.currentStage].delay
-        );
-    }
+    phase: "dealing-cards" | "player-select-card" | "player-use-card" | "player-crit" | 
+    "enemy-select-card" | "enemy-use-card" | "enemy-crit" = "player-select-card";
+    dealDelay = 1000;
+    critDelay = 4000;
+    turnDelay = 5000;
 }
 
 export const timeline1 = new Timeline;
