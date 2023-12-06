@@ -43,6 +43,52 @@ enemy.subscribe(enemy => {conditions.enemyCity = enemy.characterClass.hometown})
 export const timeline = writable(timeline1);
 
 timeline.subscribe(
-    timeline => {console.log(`Current stage is ${timeline.phase}`)}
+    timelineInner => {
+        if (timelineInner.phase === "player-crit") {
+            setTimeout(() => {
+                timeline.update(timeline => {
+                    timeline.phase = "enemy-select-card"
+                    return timeline
+                });
+            }, timeline1.turnDelay)
+        }
+
+        if (timelineInner.phase === "enemy-select-card") {
+            setTimeout(() => {
+                console.log("Using random enemy card")
+                timeline.update(timeline => {
+                    timeline.phase = "enemy-crit"
+                    return timeline
+                });
+            }, timeline1.selectDelay)
+        }
+
+        if (timelineInner.phase === "enemy-crit") {
+            setTimeout(() => {
+                console.log("Dealing cards")
+                timeline.update(timeline => {
+                    timeline.phase = "dealing-cards"
+                    return timeline
+                });
+            }, timeline1.turnDelay)
+        }
+
+        if (timelineInner.phase === "dealing-cards") {
+            setTimeout(() => {
+                console.log("Returning back to player turn")
+                timeline.update(timeline => {
+                    timeline.phase = "player-select-card"
+                    return timeline
+                });
+                player.update(player => {player.hand.addCard(player.characterClass.cards); return player})
+                enemy.update(enemy => {enemy.hand.addCard(enemy.characterClass.cards); return enemy})
+            }, timeline1.dealDelay)
+        }
+        // если мы в фазе player-crit - выводим enemy turn, переходим в фазу enemy-select-card
+        // если мы в фазе enemy-select-card - используем случайную карту. далее мы в фазе enemy-crit
+        // если мы в фазе enemy-crit - переходим в фазу dealing-cards
+        // если мы в фазе dealing-cards - даем всем по карте, переходим в фазу player-select-card
+
+    }
 )
 

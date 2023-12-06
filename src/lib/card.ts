@@ -101,22 +101,7 @@ export class Card {
                 }
             }
         }, timeline1.critDelay)
-        // timeline.update(timelineInner => {critTime = timelineInner.stages[timelineInner.currentStage].delay; 
-        //     timelineInner.move(
-        //         () => {
-
-
-        //             timeline.update(timelineInnerDeep => {
-        //                 timelineInnerDeep.move(
-        //                     () => {
-
-                        //     }
-                        // );
-        //                 return timelineInnerDeep})
-        //         }
-        //     );  
-        //     return timelineInner})
-     
+         
         return impact
     }
 }

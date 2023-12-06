@@ -12,6 +12,7 @@ export class Timeline {
     dealDelay = 1000;
     critDelay = 4000;
     turnDelay = 5000;
+    selectDelay = 3000;
 }
 
 export const timeline1 = new Timeline;
