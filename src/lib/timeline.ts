@@ -15,6 +15,11 @@ export class Timeline {
     selectDelay = 3000;
 }
 
+/*
+player-select-card - в этой фазе можно выбирать карты
+смотреть карты можно во всех фазах
+*/
+
 export const timeline1 = new Timeline;
 
 /* На что влияют фазы?

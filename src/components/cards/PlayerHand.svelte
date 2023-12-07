@@ -3,9 +3,13 @@
     import { Hand } from "../../lib/hand";
     import { fade, fly } from 'svelte/transition';
     import { timeline } from "../../stores";
+  import type { Timeline } from "../../lib/timeline";
 
     let localHand: Hand; 
     player.subscribe((player) => {localHand = player.hand});
+
+    let localTime: Timeline;
+    timeline.subscribe((timeline) => {localTime = timeline})
 
     $: status = "";
 
@@ -36,7 +40,7 @@
                 style={`width: ${card.width}px; height: ${card.width*1.5}px;`}
                 on:mouseover={()=>{localHand.hoverCard(card.id); localHand = localHand}} on:focus={()=>{localHand.hoverCard(card.id); localHand = localHand}}
                 on:mouseout={()=>{localHand.unhoverCard(card.id); localHand = localHand}} on:blur={()=>{localHand.unhoverCard(card.id); localHand = localHand}}
-                on:click={() => {localHand.selectCard(card.id); localHand = localHand}}
+                on:click={() => {localHand.selectCard(card.id, localTime); localHand = localHand}}
                 >
                     <div class="card-inner">
                         <img src={`/cards/${card.card.srcFront}`} class="card-front" alt="card-front">

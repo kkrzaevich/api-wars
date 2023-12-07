@@ -3,6 +3,8 @@
     import { player, enemy } from "../../stores";
     import { timeline } from "../../stores";
     import { Timeline } from "../../lib/timeline";
+    import { showTurnTime } from "../../lib/globalVariables";
+    import { fade } from "svelte/transition";
 
     let playerHealth: number = 30; 
     let playerShield: number = 0; 
@@ -14,11 +16,30 @@
     enemy.subscribe((enemy) => {enemyHealth = enemy.health; enemyShield = enemy.shield;});
 
     let localTime: Timeline;
-    // Вот здесь что-то не работает
-    // Попробовать реализовать задание конкретных значений таймлайна?
-    timeline.subscribe((timeline) => {localTime = timeline})
+    let turn: {
+        turn: "player" | "enemy",
+        visible: boolean,
+    } = {
+        turn: "player",
+        visible: false,
+    };
+
+    timeline.subscribe((timeline) => {
+        if (timeline.phase === "player-select-card") {
+            turn.turn = "player";
+            turn.visible = true;
+            setTimeout(() => {  turn.visible = false }, showTurnTime)
+        }
+        if (timeline.phase === "enemy-select-card") {
+            turn.turn = "enemy";
+            turn.visible = true;
+            setTimeout(() => {  turn.visible = false }, showTurnTime)
+        }
+        localTime = timeline})
 
 </script>
+
+
 
 <p>{`The phase is ${localTime.phase}.`}</p>
 <button on:click={
@@ -27,6 +48,9 @@
     }
 }>PRESS ME</button>
 <main>
+    {#if turn.visible}
+        <h1 class="turn" in:fade={{ delay: 250, duration: 1000 }} out:fade={{ delay: 150, duration: 1000 }}>{turn.turn}'s turn</h1>
+    {/if}
     <div class="health-left">
         <Health health={playerHealth} shield={playerShield}/>
     </div>
@@ -46,6 +70,7 @@
         align-items: center;
         gap: 122px;
         perspective: 1500px;
+        position: relative;
     }
 
     .stage {
@@ -77,5 +102,18 @@
         transform: rotateY(-30deg);
     }
 
+    .turn {
+        position: absolute;
+        top: 5%;
+        left: 50%;
+        transform: translate(-50%, -50%);
 
+        font-family: PT Mono;
+        font-size: 48px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+
+        filter: drop-shadow(0px 4px 15px rgba(0, 0, 0, 0.25));
+    }
 </style>

@@ -6,6 +6,7 @@ import { globalCardWidth, globalHoverCardWidth, globalSelectCardWidth, globalGap
     globalDiscardTop, defaultHandSize } from './globalVariables';
 import { CardInHand, fireballInHand} from './cardInHand';
 import { timeline } from "../stores";
+import type { Timeline } from './timeline';
 
 
 //
@@ -72,9 +73,10 @@ export class Hand {
         }
     }
 
-    selectCard(cardId: number) {
+    // Вот здесь блокируем выбор карты
+    selectCard(cardId: number, timeline: Timeline) {
         const currentCard = this.cards.find((card) => card.id === cardId);
-        if ((!this.hasSelectedCards) && ((currentCard?.state === "default") || (currentCard?.state === "hover"))) {
+        if ((timeline.phase === "player-select-card") && (!this.hasSelectedCards) && ((currentCard?.state === "default") || (currentCard?.state === "hover"))) {
             currentCard.state = "active";
             this.hasSelectedCards = true;
             this.renderCards();
