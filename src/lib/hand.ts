@@ -86,6 +86,18 @@ export class Hand {
         }
     }
 
+    enemySelectCard(cardId: number) {
+        const currentCard = this.cards.find((card) => card.id === cardId);
+        if (currentCard) {
+            currentCard.state = "active";
+            this.hasSelectedCards = true;
+            this.renderCards();
+
+            this.animationPlays = true;
+            setTimeout(() => {this.animationPlays = false}, this.animationTime);
+        }
+    }
+
     deselectCard(cardId: number) {
         const currentCard = this.cards.find((card) => card.id === cardId);
         if (currentCard?.state === "active") {
@@ -133,6 +145,26 @@ export class Hand {
     destroyCard(cardId: number) {
         this.removeCard(cardId);
         this.hasSelectedCards = false;
+    }
+
+    getRandomUsableCardId() {
+        const ids: number[] = [];
+        this.cards.forEach(card => {
+            if (card.state !== "discarded" || "isUse") {
+                ids.push(card.id)
+            }
+        });
+
+        const getShuffledArr = (arr: number[]) => {
+            const newArr = arr.slice()
+            for (let i = newArr.length - 1; i > 0; i--) {
+                const rand = Math.floor(Math.random() * (i + 1));
+                [newArr[i], newArr[rand]] = [newArr[rand], newArr[i]];
+            }
+            return newArr
+        };
+
+        return getShuffledArr(ids)[0];
     }
 }
 

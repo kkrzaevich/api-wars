@@ -53,15 +53,15 @@ timeline.subscribe(
             }, timeline1.turnDelay)
         }
 
-        if (timelineInner.phase === "enemy-select-card") {
-            setTimeout(() => {
-                console.log("Using random enemy card")
-                timeline.update(timeline => {
-                    timeline.phase = "enemy-crit"
-                    return timeline
-                });
-            }, timeline1.selectDelay)
-        }
+        // if (timelineInner.phase === "enemy-select-card") {
+        //     setTimeout(() => {
+        //         console.log("Using random enemy card")
+        //         timeline.update(timeline => {
+        //             timeline.phase = "enemy-crit"
+        //             return timeline
+        //         });
+        //     }, timeline1.selectDelay)
+        // }
 
         if (timelineInner.phase === "enemy-crit") {
             setTimeout(() => {

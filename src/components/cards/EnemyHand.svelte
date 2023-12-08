@@ -3,9 +3,39 @@
     import { Hand } from "../../lib/hand";
     import { fade, fly } from 'svelte/transition';
     import { timeline } from "../../stores";
+    import type { Timeline } from "../../lib/timeline";
 
     let localHand: Hand;
     enemy.subscribe((enemy) => {localHand = enemy.hand});
+
+    let localTime: Timeline;
+
+    let playedCardId = 0;
+
+    timeline.subscribe(async (timeline) => {
+        localTime = timeline
+        
+        if (timeline.phase === "enemy-select-card") {
+            playedCardId = localHand.getRandomUsableCardId()
+            localHand.hoverCard(playedCardId) 
+            localHand = localHand;
+            setTimeout(() => {
+                localHand.enemySelectCard(playedCardId);
+                localHand = localHand;                
+            }, 1000)
+            setTimeout(async () => {
+                console.log("The enemy is using card")
+                localHand.useCard(playedCardId); 
+                localHand = localHand;
+                let impact = await localHand.cards[playedCardId].card.use(enemy, player);
+                setTimeout(()=>{localHand.destroyCard(playedCardId);localHand = localHand;},2000)
+            }, 4000)
+        }
+
+        if (timeline.phase === "enemy-use-card") {
+
+        }
+    });
 
 </script>
 
@@ -16,7 +46,7 @@
             left: ${card.left}px;
             ${localHand.orientation === "top" ? "top" : "bottom"}: ${card.top}px;`}
             out:fly={{ delay: 0, y: 200 }}>
-                {#if card.state==="active"}
+                <!-- {#if card.state==="active"}
                     <button class="arrow top" in:fade={{ delay: 250 }} out:fade={{ delay: 250 }} on:click={() => {
                         localHand.useCard(card.id); 
                         localHand = localHand;
@@ -24,7 +54,7 @@
                         }}>
                         <img src="/cards/use.svg" alt="use card">
                     </button>
-                {/if}
+                {/if} -->
                 <button class="{`
                 ${card.state==="active" || "inUse"  ? "card" : ""} 
                 ${card.state==="active" ? "active" : ""} 
@@ -33,19 +63,21 @@
                 style={`width: ${card.width}px; height: ${card.width*1.5}px;`}
                 on:mouseover={()=>{localHand.hoverCard(card.id); localHand = localHand}} on:focus={()=>{localHand.hoverCard(card.id); localHand = localHand}}
                 on:mouseout={()=>{localHand.unhoverCard(card.id); localHand = localHand}} on:blur={()=>{localHand.unhoverCard(card.id); localHand = localHand}}
-                on:click={() => {localHand.selectCard(card.id); localHand = localHand}}
+                on:click={() => {
+                    localHand.selectCard(card.id, localTime);
+                    localHand = localHand}}
                 >
                     <div class="card-inner">
                         <img src={`/cards/${card.card.srcFront}`} class="card-back" alt="card-back">
                         <img src={`/cards/${card.card.srcBack}`} class="card-front" alt="card-front">
                     </div>
                 </button>
-                {#if card.state==="active"}
+                <!-- {#if card.state==="active"}
                     <button class="arrow bottom" in:fade={{ delay: 250 }} out:fade={{ delay: 250 }} on:click={() => {
                         localHand.deselectCard(card.id); localHand = localHand}}>
                         <img src="/cards/deselect.svg" alt="deselect card">
                     </button>
-                {/if}
+                {/if} -->
             </div>
         {/if}
     {/each}

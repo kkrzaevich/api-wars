@@ -129,7 +129,7 @@ export const fireball = new Card("Fireball","fireball.svg", async (conditions: C
             critHealing: 0,
             critShield: 0,
             phrase: `The weather in ${city.name} is ${result}!`,
-            crit: result === "Rain" || "Thunderstorm" ? true : false,
+            crit: result === "Clear" ? true : false,
         }
         return impact;
     }
