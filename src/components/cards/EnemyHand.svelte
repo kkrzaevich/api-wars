@@ -5,14 +5,27 @@
     import { timeline } from "../../stores";
     import type { Timeline } from "../../lib/timeline";
 
-    let localHand: Hand;
-    enemy.subscribe((enemy) => {localHand = enemy.hand});
+    let localHand: Hand = new Hand("top",30,[],false);
+    let handSize = 0;
+    enemy.subscribe((enemy) => {
+        if (handSize !== enemy.hand.cards.length) {
+            handSize = enemy.hand.cards.length;
+            setTimeout(() => {
+                localHand.cards.forEach((card) => {
+                    card.top = 0;
+                    localHand = localHand;
+                })
+            });
+        }
+        
+        localHand = enemy.hand
+    });
 
     let localTime: Timeline;
 
     let playedCardId = 0;
 
-    timeline.subscribe(async (timeline) => {
+    timeline.subscribe(async (timeline) => {      
         localTime = timeline
         
         if (timeline.phase === "enemy-select-card") {
@@ -55,7 +68,7 @@
                         <img src="/cards/use.svg" alt="use card">
                     </button>
                 {/if} -->
-                <button class="{`
+                <!-- <button class="{`
                 ${card.state==="active" || "inUse"  ? "card" : ""} 
                 ${card.state==="active" ? "active" : ""} 
                 ${card.state==="inUse" ? "in-use" : ""}
@@ -66,7 +79,14 @@
                 on:click={() => {
                     localHand.selectCard(card.id, localTime);
                     localHand = localHand}}
-                >
+                > -->
+                <button class="{`
+                    ${card.state==="active" || "inUse"  ? "card" : ""} 
+                    ${card.state==="active" ? "active" : ""} 
+                    ${card.state==="inUse" ? "in-use" : ""}
+                    `}" 
+                    style={`width: ${card.width}px; height: ${card.width*1.5}px;`}
+                    >
                     <div class="card-inner">
                         <img src={`/cards/${card.card.srcFront}`} class="card-back" alt="card-back">
                         <img src={`/cards/${card.card.srcBack}`} class="card-front" alt="card-front">

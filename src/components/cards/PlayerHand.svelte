@@ -1,12 +1,24 @@
 <script lang="ts">
-    import { player, enemy } from "../../stores";
+    import { player, enemy, cards } from "../../stores";
     import { Hand } from "../../lib/hand";
     import { fade, fly } from 'svelte/transition';
     import { timeline } from "../../stores";
   import type { Timeline } from "../../lib/timeline";
 
-    let localHand: Hand; 
-    player.subscribe((player) => {localHand = player.hand});
+    let localHand: Hand = new Hand("bottom",30,[],true); 
+    let handSize = 0;
+    player.subscribe((player) => {
+        if (handSize !== player.hand.cards.length) {
+            handSize = player.hand.cards.length;
+            setTimeout(() => {
+                localHand.cards.forEach((card) => {
+                    card.top = 0;
+                    localHand = localHand;
+                })
+            });
+        }
+        localHand = player.hand;
+    });
 
     let localTime: Timeline;
     timeline.subscribe((timeline) => {localTime = timeline})

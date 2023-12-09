@@ -115,6 +115,7 @@ export class Hand {
         for (let i = 0; i < handSize; i++) {
             const newCard = availableCards[Math.floor(Math.random()*availableCards.length)];
             const newCardInHand = new CardInHand(newCard, i, this.gap*i, this.frontVisible ? true : false)
+            newCardInHand.top = -300;
             this.cards.push(newCardInHand);
         }
     }
@@ -122,6 +123,7 @@ export class Hand {
     addCard(availableCards: Card[]) {
         const newCard = availableCards[Math.floor(Math.random()*availableCards.length)];
         const newCardInHand = new CardInHand(newCard, this.cards.length, this.gap*this.cards.length, true)
+        newCardInHand.top = -300;
         this.cards.push(newCardInHand);
     }
 
