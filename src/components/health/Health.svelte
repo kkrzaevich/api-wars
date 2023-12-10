@@ -2,6 +2,7 @@
   import App from "../../App.svelte";
     import { timeline } from "../../stores";
     import { fly, fade } from "svelte/transition";
+    import { maxHp, maxShield } from "../../lib/globalVariables";
     export let health = 30;
     export let shield = 0;
 
@@ -100,9 +101,18 @@
         {#if showShieldDamage}
             <p class="shield-gains shield-damage"  in:fade={{ delay: 250 }} out:fly={{ y: 20 }}>{shieldDifference}</p>
         {/if}
-        <p class="points">{displayedHealth}</p>
+        <div class="points">
+            <p class="points-current">{displayedHealth}</p>
+            <p class="points-max">/{maxHp}</p>            
+        </div>
+
         <img src="/health/shield.svg" alt="shield points">
-        <p class="points">{displayedShield}</p>
+
+        <div class="points">
+            <p class="points-current">{displayedShield}</p>
+            <p class="points-max">/{maxShield}</p>  
+        </div>
+
 </main>
 
 <style>
@@ -119,11 +129,25 @@
 
     }
 
+    .points {
+        display: flex;
+    }
+
+    .points-max {
+        font-family: PT Mono;
+        font-size: 1rem;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+
+        padding-top: 3px;
+    }
+
     img {
         min-width: 35px;
     }
 
-    .points {
+    .points-current {
         color: #000;
 
         font-family: PT Mono;
@@ -132,13 +156,15 @@
         font-weight: 400;
         line-height: normal;
 
+        justify-self: flex-start;
+
     }
 
-    .points,img {
+    .points-current,img {
         transition: filter 0.5s;
     }
 
-    .points:hover,img:hover {
+    .points-current:hover,img:hover {
         filter: drop-shadow(0px 4px 10px rgba(0, 0, 0, 0.75));
     }
 
@@ -169,19 +195,19 @@
     }
 
     .heal {
-        color: rgba(0, 255, 51, 0.5);
+        color: rgba(0, 255, 51, 0.75);
     }
 
     .damage {
-        color: rgba(233, 46, 46, 0.5);
+        color: rgba(233, 46, 46, 0.75);
     }
 
     .shield-heal {
-        color: rgba(0, 195, 255, 0.5);
+        color: rgba(0, 195, 255, 0.75);
     }
 
     .shield-damage {
-        color: rgba(49, 46, 233, 0.5);        
+        color: rgba(49, 46, 233, 0.75);        
     }
 </style>
 

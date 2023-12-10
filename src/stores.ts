@@ -4,7 +4,7 @@ import type { Impact } from './lib/impact';
 import { Card, fireball, cloudShield, cauterizeWounds, healingRain, lightning, waterBolt, availableCards } from './lib/card';
 import { globalCardWidth, globalHoverCardWidth, globalSelectCardWidth, globalGap,
     globalHoverGap, globalHoverTopGap, globalSelectLeft, globalSelectTopGap, 
-    globalDiscardTop, defaultHandSize } from './lib/globalVariables';
+    globalDiscardTop, defaultHandSize, globalShieldTick } from './lib/globalVariables';
 import { CardInHand, fireballInHand} from './lib/cardInHand';
 import { Hand, playerHand, enemyHand } from './lib/hand';
 import { Player, player1, player2 } from './lib/player';
@@ -80,15 +80,22 @@ timeline.subscribe(
                     timeline.phase = "player-select-card"
                     return timeline
                 });
-                player.update(player => {player.hand.addCard(player.characterClass.cards); return player})
-                enemy.update(enemy => {enemy.hand.addCard(enemy.characterClass.cards); return enemy})
+                player.update(player => {
+                    player.hand.addCard(player.characterClass.cards);
+                    if (player.shield > 0) {
+                        player.shield -= globalShieldTick; 
+                    }
+                    return player
+                })
+                enemy.update(enemy => {
+                    enemy.hand.addCard(enemy.characterClass.cards); 
+                    if (enemy.shield > 0) {
+                        enemy.shield -= globalShieldTick; 
+                    }
+                    return enemy
+                })
             }, timeline1.dealDelay)
         }
-        // если мы в фазе player-crit - выводим enemy turn, переходим в фазу enemy-select-card
-        // если мы в фазе enemy-select-card - используем случайную карту. далее мы в фазе enemy-crit
-        // если мы в фазе enemy-crit - переходим в фазу dealing-cards
-        // если мы в фазе dealing-cards - даем всем по карте, переходим в фазу player-select-card
-
-    }
+           }
 )
 

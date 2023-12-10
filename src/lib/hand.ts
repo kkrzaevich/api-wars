@@ -122,7 +122,7 @@ export class Hand {
 
     addCard(availableCards: Card[]) {
         const newCard = availableCards[Math.floor(Math.random()*availableCards.length)];
-        const newCardInHand = new CardInHand(newCard, this.cards.length, this.gap*this.cards.length, true)
+        const newCardInHand = new CardInHand(newCard, this.cards.length, this.gap*this.getUsableCards().length, true)
         newCardInHand.top = -300;
         this.cards.push(newCardInHand);
     }
@@ -149,10 +149,20 @@ export class Hand {
         this.hasSelectedCards = false;
     }
 
+    getUsableCards() {
+        const cards: CardInHand[] = [];
+        this.cards.forEach(card => {
+            if (card.state !== "discarded") {
+                cards.push(card)
+            }
+        });
+        return cards;
+    }
+
     getRandomUsableCardId() {
         const ids: number[] = [];
         this.cards.forEach(card => {
-            if (card.state !== "discarded" || "isUse") {
+            if (card.state !== "discarded") {
                 ids.push(card.id)
             }
         });

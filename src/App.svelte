@@ -46,4 +46,9 @@
     position: absolute;
     bottom: 50px;
   }
+
+  :global(body) {
+    height: 100%;
+    overflow: hidden;
+  }
 </style>

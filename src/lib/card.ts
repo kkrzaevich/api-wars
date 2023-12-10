@@ -11,6 +11,8 @@ import { Timeline, timeline1 } from "./timeline";
 
 import { timeline } from "../stores";
 
+import { maxHp, maxShield } from "./globalVariables";
+
 
 //
 //
@@ -42,8 +44,21 @@ export class Card {
 
         if (player) {
             player.update((player) => {
-                player.health += impact.healing;
-                player.shield += impact.shield;
+                if (impact.shield > 0) {
+                    for (let i = 0; i<impact.shield; i++) {
+                        if (player.shield < maxShield) {
+                            player.shield += 1;
+                        } 
+                    }
+                }
+
+                if (impact.healing > 0) {
+                    for (let i = 0; i<impact.healing; i++) {
+                        if (player.health < maxHp) {
+                            player.health += 1;
+                        } 
+                    }
+                }
 
                 return player;
             })
@@ -77,8 +92,21 @@ export class Card {
             if (impact.crit) {
                 if (player) {
                     player.update((player) => {
-                        player.health += impact.critHealing;
-                        player.shield += impact.critShield;
+                        if (impact.critHealing > 0) {
+                            for (let i = 0; i<impact.critHealing; i++) {
+                                if (player.health < maxHp) {
+                                    player.health += 1;
+                                } 
+                            }
+                        }
+
+                        if (impact.critShield > 0) {
+                            for (let i = 0; i<impact.critShield; i++) {
+                                if (player.shield < maxShield) {
+                                    player.shield += 1;
+                                } 
+                            }
+                        }
         
                         return player;
                     })
@@ -122,7 +150,7 @@ export const fireball = new Card("Fireball","fireball.svg", async (conditions: C
         let weather = await res.json();
         let result : string = weather.weather[0].main;
         const impact: Impact = {
-            damage: 3,
+            damage: 4,
             healing: 0,
             shield: 0,
             critDamage: 3,
@@ -155,7 +183,7 @@ export const waterBolt = new Card("Water bolt", "water-bolt.svg", async (conditi
         let weather = await res.json();
         let result : string = weather.weather[0].main;
         const impact: Impact = {
-            damage: 3,
+            damage: 4,
             healing: 0,
             shield: 0,
             critDamage: 3,
@@ -188,7 +216,7 @@ export const lightning = new Card("Lightning", "lightning.svg", async (condition
         let weather = await res.json();
         let result : string = weather.weather[0].main;
         const impact: Impact = {
-            damage: 3,
+            damage: 4,
             healing: 0,
             shield: 0,
             critDamage: 3,

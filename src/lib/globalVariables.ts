@@ -21,3 +21,7 @@ export const defaultHandSize = 6;
 export const critTime = 2000;
 
 export const showTurnTime = 2200;
+
+export const maxHp = 30;
+export const maxShield = 30;
+export const globalShieldTick = 2;
