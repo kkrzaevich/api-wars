@@ -131,6 +131,7 @@
 
     .points {
         display: flex;
+        width: 70px;
     }
 
     .points-max {

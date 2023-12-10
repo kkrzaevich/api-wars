@@ -37,8 +37,18 @@ export const player = writable(player1)
 
 export const enemy = writable(player2)
 
-player.subscribe(player => {conditions.playerCity = player.characterClass.hometown})
-enemy.subscribe(enemy => {conditions.enemyCity = enemy.characterClass.hometown})
+player.subscribe(player => {
+    conditions.playerCity = player.characterClass.hometown;
+    if (player.health <= 0) {
+        timeline.update(timeline => {timeline.phase = "enemy-won"; return timeline})
+    }
+})
+enemy.subscribe(enemy => {
+    conditions.enemyCity = enemy.characterClass.hometown;
+    if (enemy.health <= 0) {
+        timeline.update(timeline => {timeline.phase = "player-won"; return timeline})
+    }
+})
 
 export const timeline = writable(timeline1);
 
@@ -52,16 +62,6 @@ timeline.subscribe(
                 });
             }, timeline1.turnDelay)
         }
-
-        // if (timelineInner.phase === "enemy-select-card") {
-        //     setTimeout(() => {
-        //         console.log("Using random enemy card")
-        //         timeline.update(timeline => {
-        //             timeline.phase = "enemy-crit"
-        //             return timeline
-        //         });
-        //     }, timeline1.selectDelay)
-        // }
 
         if (timelineInner.phase === "enemy-crit") {
             setTimeout(() => {

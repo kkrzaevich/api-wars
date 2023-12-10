@@ -5,9 +5,11 @@
     import { timeline } from "../../stores";
     import type { Timeline } from "../../lib/timeline";
 
+    let localEnemyHealth = 30; 
     let localHand: Hand = new Hand("top",30,[],false);
     let handSize = 0;
     enemy.subscribe((enemy) => {
+        localEnemyHealth = enemy.health;
         if (handSize !== enemy.hand.cards.length) {
             handSize = enemy.hand.cards.length;
             setTimeout(() => {
@@ -29,7 +31,12 @@
         localTime = timeline
         
         if (timeline.phase === "enemy-select-card") {
-            playedCardId = localHand.getRandomUsableCardId()
+            if (localEnemyHealth < 24) {
+                playedCardId = localHand.getRandomUsableCardId()
+            } else {
+                playedCardId = localHand.getRandomUsableNonhealingCardId()
+            }
+
             localHand.hoverCard(playedCardId) 
             localHand = localHand;
             setTimeout(() => {

@@ -1,6 +1,7 @@
 import type { Card } from './card';
 import type { Writable } from 'svelte/store';
-import { fireball, cloudShield, cauterizeWounds, healingRain, lightning, waterBolt, availableCards } from './card';
+import { fireball, cloudShield, cauterizeWounds, healingRain, lightning, waterBolt, 
+    availableCards, availableCardsDefence, availableCardsOffence } from './card';
 import { globalCardWidth, globalHoverCardWidth, globalSelectCardWidth, globalGap,
     globalHoverGap, globalHoverTopGap, globalSelectLeft, globalSelectTopGap, 
     globalDiscardTop, defaultHandSize, defaultDefenseCardsNumber, defaultOffenseCardsNumber } from './globalVariables';
@@ -109,10 +110,16 @@ export class Hand {
         }
     }
 
-    fillHand(handSize: number, availableCards: Card[]) {
+    fillHand(handSize: number, availableCardsOffence: Card[], availableCardsDefence: Card[]) {
         this.cards = [];
-        for (let i = 0; i < handSize; i++) {
-            const newCard = availableCards[Math.floor(Math.random()*availableCards.length)];
+        for (let i = 0; i < defaultOffenseCardsNumber; i++) {
+            const newCard = availableCardsOffence[Math.floor(Math.random()*availableCardsOffence.length)];
+            const newCardInHand = new CardInHand(newCard, i, this.gap*i, this.frontVisible ? true : false)
+            newCardInHand.top = -300;
+            this.cards.push(newCardInHand);
+        }
+        for (let i = defaultOffenseCardsNumber; i < defaultDefenseCardsNumber + defaultOffenseCardsNumber; i++) {
+            const newCard = availableCardsDefence[Math.floor(Math.random()*availableCardsDefence.length)];
             const newCardInHand = new CardInHand(newCard, i, this.gap*i, this.frontVisible ? true : false)
             newCardInHand.top = -300;
             this.cards.push(newCardInHand);
@@ -178,10 +185,10 @@ export class Hand {
         return getShuffledArr(ids)[0];
     }
 
-    getRandomUsableDamageCardId() {
+    getRandomUsableNonhealingCardId() {
         const ids: number[] = [];
         this.cards.forEach(card => {
-            if (card.state !== "discarded" && card.card.cardType === "damage") {
+            if (card.state !== "discarded" && card.card.cardType !== "healing") {
                 ids.push(card.id)
             }
         });
@@ -200,7 +207,7 @@ export class Hand {
 }
 
 export const playerHand = new Hand("bottom",30,[],true);
-playerHand.fillHand(defaultHandSize,availableCards)
+playerHand.fillHand(defaultHandSize,availableCardsOffence,availableCardsDefence)
 
 export const enemyHand = new Hand("top",30,[],false);
-enemyHand.fillHand(defaultHandSize,availableCards)
+enemyHand.fillHand(defaultHandSize,availableCardsOffence,availableCardsDefence)

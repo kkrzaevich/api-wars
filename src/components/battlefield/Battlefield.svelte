@@ -24,18 +24,35 @@
         visible: false,
     };
 
+    let announcement : string;
+
     timeline.subscribe((timeline) => {
         if (timeline.phase === "player-select-card") {
+            announcement = `${turn.turn}'s turn`;
             turn.turn = "player";
             turn.visible = true;
             setTimeout(() => {  turn.visible = false }, showTurnTime)
         }
         if (timeline.phase === "enemy-select-card") {
+            announcement = `${turn.turn}'s turn`;
             turn.turn = "enemy";
             turn.visible = true;
             setTimeout(() => {  turn.visible = false }, showTurnTime)
         }
-        localTime = timeline})
+        if (timeline.phase === "player-won") {
+            setTimeout(() => {  
+                announcement = "You won ( ◡̀_◡́)ᕤ "; 
+                turn.visible = true; 
+            }, 4500)
+        }
+        if (timeline.phase === "enemy-won") {
+            setTimeout(() => {  
+                announcement = "You lost (｡ •́︿•̀｡ )"; 
+                turn.visible = true; 
+            }, 4500)
+        }
+        localTime = timeline}
+        )
 
 </script>
 
@@ -49,7 +66,7 @@
 }>PRESS ME</button>
 <main>
     {#if turn.visible}
-        <h1 class="turn" in:fade={{ delay: 250, duration: 1000 }} out:fade={{ delay: 150, duration: 1000 }}>{turn.turn}'s turn</h1>
+        <h1 class="turn" in:fade={{ delay: 250, duration: 1000 }} out:fade={{ delay: 150, duration: 1000 }}>{announcement}</h1>
     {/if}
     <div class="health-left">
         <Health health={playerHealth} shield={playerShield}/>
