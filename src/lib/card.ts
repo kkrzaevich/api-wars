@@ -152,7 +152,7 @@ export const fireball = new Card("Fireball","damage","fireball.svg", async (cond
         let weather = await res.json();
         let result : string = weather.weather[0].main;
         const impact: Impact = {
-            damage: 30,
+            damage: 4,
             healing: 0,
             shield: 0,
             critDamage: 3,
