@@ -3,7 +3,7 @@ import type { Writable } from 'svelte/store';
 import { fireball, cloudShield, cauterizeWounds, healingRain, lightning, waterBolt, availableCards } from './card';
 import { globalCardWidth, globalHoverCardWidth, globalSelectCardWidth, globalGap,
     globalHoverGap, globalHoverTopGap, globalSelectLeft, globalSelectTopGap, 
-    globalDiscardTop, defaultHandSize } from './globalVariables';
+    globalDiscardTop, defaultHandSize, defaultDefenseCardsNumber, defaultOffenseCardsNumber } from './globalVariables';
 import { CardInHand, fireballInHand} from './cardInHand';
 import { timeline } from "../stores";
 import type { Timeline } from './timeline';
@@ -73,7 +73,6 @@ export class Hand {
         }
     }
 
-    // Вот здесь блокируем выбор карты
     selectCard(cardId: number, timeline: Timeline) {
         const currentCard = this.cards.find((card) => card.id === cardId);
         if ((timeline.phase === "player-select-card") && (!this.hasSelectedCards) && ((currentCard?.state === "default") || (currentCard?.state === "hover"))) {
@@ -163,6 +162,26 @@ export class Hand {
         const ids: number[] = [];
         this.cards.forEach(card => {
             if (card.state !== "discarded") {
+                ids.push(card.id)
+            }
+        });
+
+        const getShuffledArr = (arr: number[]) => {
+            const newArr = arr.slice()
+            for (let i = newArr.length - 1; i > 0; i--) {
+                const rand = Math.floor(Math.random() * (i + 1));
+                [newArr[i], newArr[rand]] = [newArr[rand], newArr[i]];
+            }
+            return newArr
+        };
+
+        return getShuffledArr(ids)[0];
+    }
+
+    getRandomUsableDamageCardId() {
+        const ids: number[] = [];
+        this.cards.forEach(card => {
+            if (card.state !== "discarded" && card.card.cardType === "damage") {
                 ids.push(card.id)
             }
         });

@@ -39,12 +39,13 @@
 
   .top {
     position: absolute;
-    top: 50px;
+    top: 25px;
+    padding-right: 500px;
   }
 
   .bottom {
     position: absolute;
-    bottom: 50px;
+    bottom: 25px;
   }
 
   :global(body) {

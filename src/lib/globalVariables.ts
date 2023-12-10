@@ -17,6 +17,8 @@ export const globalSelectTopGap = 20;
 export const globalDiscardTop = 200;
 
 export const defaultHandSize = 6;
+export const defaultOffenseCardsNumber = 3;
+export const defaultDefenseCardsNumber = 3;
 
 export const critTime = 2000;
 

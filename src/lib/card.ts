@@ -20,12 +20,14 @@ import { maxHp, maxShield } from "./globalVariables";
 
 export class Card {
     name: string = "Fireball";
+    cardType: "damage" | "healing" | "shield" = "damage";
     srcFront: string = "fireball.svg";
     srcBack: string = "back.svg";
     callback: Function = (conditions: Conditions) => {}
 
-    constructor(name: string = "Fireball", srcFront: string = "fireball.svg", callback: Function = () => {}) {
+    constructor(name: string = "Fireball", cardType: string = "damage", srcFront: string = "fireball.svg", callback: Function = () => {}) {
         this.name = name;
+        this.cardType = "damage";
         this.srcFront = srcFront;
         this.callback = callback;
     }
@@ -136,7 +138,7 @@ export class Card {
 
 // Fireball
 
-export const fireball = new Card("Fireball","fireball.svg", async (conditions: Conditions) => {
+export const fireball = new Card("Fireball","damage","fireball.svg", async (conditions: Conditions) => {
     const city = conditions.enemyCity;
 
     try {const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${city.latitude}&lon=${city.longitude}&appid=${import.meta.env.VITE_WEATHER_KEY}&units=metric`, {
@@ -169,7 +171,7 @@ export const fireball = new Card("Fireball","fireball.svg", async (conditions: C
 
 // Water bolt
 
-export const waterBolt = new Card("Water bolt", "water-bolt.svg", async (conditions: Conditions) => {
+export const waterBolt = new Card("Water bolt","damage", "water-bolt.svg", async (conditions: Conditions) => {
     const city = conditions.enemyCity;
 
     try {const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${city.latitude}&lon=${city.longitude}&appid=${import.meta.env.VITE_WEATHER_KEY}&units=metric`, {
@@ -202,7 +204,7 @@ export const waterBolt = new Card("Water bolt", "water-bolt.svg", async (conditi
 
 // Lightning
 
-export const lightning = new Card("Lightning", "lightning.svg", async (conditions: Conditions) => {
+export const lightning = new Card("Lightning","damage", "lightning.svg", async (conditions: Conditions) => {
     const city = conditions.enemyCity;
 
     try {const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${city.latitude}&lon=${city.longitude}&appid=${import.meta.env.VITE_WEATHER_KEY}&units=metric`, {
@@ -235,7 +237,7 @@ export const lightning = new Card("Lightning", "lightning.svg", async (condition
 
 // Cloud Shield
 
-export const cloudShield = new Card("Cloud shield","cloud-shield.svg", async (conditions: Conditions) => {
+export const cloudShield = new Card("Cloud shield","shield","cloud-shield.svg", async (conditions: Conditions) => {
     const city = conditions.arenaCity;
 
     try {const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${city.latitude}&lon=${city.longitude}&appid=${import.meta.env.VITE_WEATHER_KEY}&units=metric`, {
@@ -268,7 +270,7 @@ export const cloudShield = new Card("Cloud shield","cloud-shield.svg", async (co
 
 // Cauterize Wounds
 
-export const cauterizeWounds = new Card("Cauterize wounds", "cauterize-wounds.svg", async (conditions: Conditions) => {
+export const cauterizeWounds = new Card("Cauterize wounds","healing", "cauterize-wounds.svg", async (conditions: Conditions) => {
     const city = conditions.playerCity;
 
     try {const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${city.latitude}&lon=${city.longitude}&appid=${import.meta.env.VITE_WEATHER_KEY}&units=metric`, {
@@ -301,7 +303,7 @@ export const cauterizeWounds = new Card("Cauterize wounds", "cauterize-wounds.sv
 
 // Heaing Rain
 
-export const healingRain = new Card("Healing rain", "healing-rain.svg", async (conditions: Conditions) => {
+export const healingRain = new Card("Healing rain","healing", "healing-rain.svg", async (conditions: Conditions) => {
     const city = conditions.playerCity;
 
     try {const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${city.latitude}&lon=${city.longitude}&appid=${import.meta.env.VITE_WEATHER_KEY}&units=metric`, {
